@@ -7,154 +7,79 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/dist/tabler-icons.min.css">
 <script src="https://accounts.google.com/gsi/client" async></script>
 <style>
-:root{
-  --bg:#fff;--bg2:#f8f9fa;--bg3:#f1f3f5;
-  --text:#111827;--text2:#6b7280;--text3:#9ca3af;
-  --border:#e5e7eb;--border2:#d1d5db;
-  --ok-bg:#d1fae5;--ok-tx:#065f46;
-  --wn-bg:#fef3c7;--wn-tx:#92400e;
-  --er-bg:#fee2e2;--er-tx:#991b1b;
-  --in-bg:#dbeafe;--in-tx:#1e40af;
-  --r:8px;--rl:12px;
-}
-@media(prefers-color-scheme:dark){:root{
-  --bg:#1e1e2e;--bg2:#252537;--bg3:#16162a;
-  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
-  --border:#334155;--border2:#475569;
-  --ok-bg:#064e3b;--ok-tx:#6ee7b7;
-  --wn-bg:#451a03;--wn-tx:#fcd34d;
-  --er-bg:#450a0a;--er-tx:#fca5a5;
-  --in-bg:#1e3a5f;--in-tx:#93c5fd;
-}}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;background:var(--bg3);color:var(--text);min-height:100vh;}
-#app{max-width:1120px;margin:0 auto;padding:1.25rem 1rem 3rem;}
-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px;}
-h1{font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px;}
-h1 small{font-size:12px;font-weight:400;color:var(--text2);}
-.sync-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:4px 10px;border-radius:20px;border:.5px solid var(--border2);}
-.sync-ok{background:var(--ok-bg);color:var(--ok-tx);}
-.sync-ing{background:var(--wn-bg);color:var(--wn-tx);}
-.sync-err{background:var(--er-bg);color:var(--er-tx);}
-.sync-off{background:var(--bg2);color:var(--text2);}
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:.75rem;}
-.stat-card{background:var(--bg);border:.5px solid var(--border);border-radius:var(--r);padding:10px 12px;}
-.stat-label{font-size:11px;color:var(--text2);margin-bottom:3px;letter-spacing:.04em;}
-.stat-val{font-size:20px;font-weight:600;font-family:'Courier New',monospace;}
-.alerts-wrap{margin-bottom:.75rem;}
-.alerts-header{display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 10px;border-radius:var(--r);background:var(--bg2);border:.5px solid var(--border);user-select:none;}
-.alerts-header:hover{background:var(--bg3);}
-.alert-badge{font-size:11px;font-weight:600;padding:1px 7px;border-radius:8px;}
-.alerts-body{margin-top:6px;max-height:220px;overflow-y:auto;display:none;}
-.alerts-body.open{display:block;}
-.alert-row{border-radius:var(--r);padding:6px 10px;margin-bottom:4px;font-size:12px;display:flex;align-items:center;gap:7px;}
-.al-er{background:var(--er-bg);color:var(--er-tx);}
-.al-wn{background:var(--wn-bg);color:var(--wn-tx);}
-.tab-bar{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:1rem;}
-.tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:8px 13px;cursor:pointer;font-size:13px;color:var(--text2);margin-bottom:-1px;display:flex;align-items:center;gap:5px;}
-.tab-btn:hover{color:var(--text);}
-.tab-btn.active{color:var(--text);border-bottom-color:var(--text);font-weight:500;}
-.tab-panel{display:none;}
-.tab-panel.active{display:block;}
-.tw{overflow-x:auto;border:.5px solid var(--border);border-radius:var(--rl);background:var(--bg);}
-table{width:100%;border-collapse:collapse;font-size:12px;min-width:680px;}
-th{padding:8px 10px;text-align:left;font-size:11px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border);background:var(--bg2);white-space:nowrap;}
-td{padding:5px 10px;border-bottom:.5px solid var(--border);vertical-align:middle;}
-tr:last-child td{border-bottom:none;}
-tr:hover td{background:var(--bg2);}
-.pill{display:inline-block;font-family:'Courier New',monospace;font-size:11px;padding:1px 7px;border-radius:8px;font-weight:600;}
-.pill-ok{background:var(--ok-bg);color:var(--ok-tx);}
-.pill-wn{background:var(--wn-bg);color:var(--wn-tx);}
-.pill-er{background:var(--er-bg);color:var(--er-tx);}
-.ei{background:var(--bg);border:.5px solid var(--border2);border-radius:4px;padding:2px 5px;width:58px;font-size:12px;font-family:'Courier New',monospace;color:var(--text);}
-.rs{background:var(--bg);border:.5px solid var(--border2);border-radius:4px;padding:2px 5px;font-size:11px;color:var(--text);max-width:130px;}
-.rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:1.5rem;}
-.rc{background:var(--bg);border:.5px solid var(--border);border-radius:var(--r);padding:12px 13px;position:relative;}
-.rn{font-size:11px;font-weight:600;margin-bottom:3px;}
-.rv{font-size:19px;font-weight:600;font-family:'Courier New',monospace;}
-.rpb{height:4px;background:var(--border);border-radius:2px;margin-top:6px;}
-.rpf{height:4px;border-radius:2px;}
-.sc{border:.5px solid var(--border);border-radius:var(--r);padding:11px 13px;margin-bottom:7px;display:flex;align-items:flex-start;gap:11px;background:var(--bg);}
-.sc-urgent{border-left:3px solid #ef4444;}
-.sn{width:22px;height:22px;border-radius:50%;background:var(--in-bg);color:var(--in-tx);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.le{display:flex;gap:10px;padding:7px 0;border-bottom:.5px solid var(--border);font-size:11px;}
-.lts{color:var(--text3);font-family:'Courier New',monospace;min-width:105px;flex-shrink:0;}
+:root{--bg:#fff;--bg2:#f8f9fa;--bg3:#f1f3f5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;--border:#e5e7eb;--border2:#d1d5db;--ok-bg:#d1fae5;--ok-tx:#065f46;--wn-bg:#fef3c7;--wn-tx:#92400e;--er-bg:#fee2e2;--er-tx:#991b1b;--in-bg:#dbeafe;--in-tx:#1e40af;--r:8px;--rl:12px;}
+@media(prefers-color-scheme:dark){:root{--bg:#1e1e2e;--bg2:#252537;--bg3:#16162a;--text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;--border:#334155;--border2:#475569;--ok-bg:#064e3b;--ok-tx:#6ee7b7;--wn-bg:#451a03;--wn-tx:#fcd34d;--er-bg:#450a0a;--er-tx:#fca5a5;--in-bg:#1e3a5f;--in-tx:#93c5fd;}}
+*{box-sizing:border-box;margin:0;padding:0;}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;background:var(--bg3);color:var(--text);min-height:100vh;}
+#app{max-width:1120px;margin:0 auto;padding:1.25rem 1rem 3rem;}header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px;}
+h1{font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px;}h1 small{font-size:12px;font-weight:400;color:var(--text2);}
+.sync-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:4px 10px;border-radius:20px;border:.5px solid var(--border2);}.sync-ok{background:var(--ok-bg);color:var(--ok-tx);}.sync-ing{background:var(--wn-bg);color:var(--wn-tx);}.sync-err{background:var(--er-bg);color:var(--er-tx);}.sync-off{background:var(--bg2);color:var(--text2);}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:.75rem;}.stat-card{background:var(--bg);border:.5px solid var(--border);border-radius:var(--r);padding:10px 12px;}.stat-label{font-size:11px;color:var(--text2);margin-bottom:3px;letter-spacing:.04em;}.stat-val{font-size:20px;font-weight:600;font-family:'Courier New',monospace;}
+.alerts-wrap{margin-bottom:.75rem;}.alerts-header{display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 10px;border-radius:var(--r);background:var(--bg2);border:.5px solid var(--border);user-select:none;}.alerts-header:hover{background:var(--bg3);}.alert-badge{font-size:11px;font-weight:600;padding:1px 7px;border-radius:8px;}.alerts-body{margin-top:6px;max-height:220px;overflow-y:auto;display:none;}.alerts-body.open{display:block;}.alert-row{border-radius:var(--r);padding:6px 10px;margin-bottom:4px;font-size:12px;display:flex;align-items:center;gap:7px;}.al-er{background:var(--er-bg);color:var(--er-tx);}.al-wn{background:var(--wn-bg);color:var(--wn-tx);}
+.tab-bar{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:1rem;}.tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:8px 13px;cursor:pointer;font-size:13px;color:var(--text2);margin-bottom:-1px;display:flex;align-items:center;gap:5px;}.tab-btn:hover{color:var(--text);}.tab-btn.active{color:var(--text);border-bottom-color:var(--text);font-weight:500;}.tab-panel{display:none;}.tab-panel.active{display:block;}
+.tw{overflow-x:auto;border:.5px solid var(--border);border-radius:var(--rl);background:var(--bg);}table{width:100%;border-collapse:collapse;font-size:12px;min-width:680px;}th{padding:8px 10px;text-align:left;font-size:11px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border);background:var(--bg2);white-space:nowrap;}td{padding:5px 10px;border-bottom:.5px solid var(--border);vertical-align:middle;}tr:last-child td{border-bottom:none;}tr:hover td{background:var(--bg2);}
+.pill{display:inline-block;font-family:'Courier New',monospace;font-size:11px;padding:1px 7px;border-radius:8px;font-weight:600;}.pill-ok{background:var(--ok-bg);color:var(--ok-tx);}.pill-wn{background:var(--wn-bg);color:var(--wn-tx);}.pill-er{background:var(--er-bg);color:var(--er-tx);}
+.ei{background:var(--bg);border:.5px solid var(--border2);border-radius:4px;padding:2px 5px;width:58px;font-size:12px;font-family:'Courier New',monospace;color:var(--text);}.rs{background:var(--bg);border:.5px solid var(--border2);border-radius:4px;padding:2px 5px;font-size:11px;color:var(--text);max-width:130px;}
+.rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:1.5rem;}.rc{background:var(--bg);border:.5px solid var(--border);border-radius:var(--r);padding:12px 13px;position:relative;}.rn{font-size:11px;font-weight:600;margin-bottom:3px;}.rv{font-size:19px;font-weight:600;font-family:'Courier New',monospace;}.rpb{height:4px;background:var(--border);border-radius:2px;margin-top:6px;}.rpf{height:4px;border-radius:2px;}
+.sc{border:.5px solid var(--border);border-radius:var(--r);padding:11px 13px;margin-bottom:7px;display:flex;align-items:flex-start;gap:11px;background:var(--bg);}.sc-urgent{border-left:3px solid #ef4444;}.sn{width:22px;height:22px;border-radius:50%;background:var(--in-bg);color:var(--in-tx);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.le{display:flex;gap:10px;padding:7px 0;border-bottom:.5px solid var(--border);font-size:11px;}.lts{color:var(--text3);font-family:'Courier New',monospace;min-width:105px;flex-shrink:0;}
 .bk-row{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border:.5px solid var(--border);border-radius:var(--r);margin-bottom:6px;font-size:12px;}
-.btn{background:var(--bg);border:.5px solid var(--border2);border-radius:var(--r);padding:5px 12px;cursor:pointer;font-size:12px;color:var(--text);display:inline-flex;align-items:center;gap:5px;}
-.btn:hover{background:var(--bg2);}
-.btn-connect{background:var(--in-bg);color:var(--in-tx);border-color:var(--in-tx);}
-.btn-ok{background:var(--ok-bg);color:var(--ok-tx);border-color:var(--ok-tx);}
-.btn-er{background:var(--er-bg);color:var(--er-tx);border-color:var(--er-tx);}
-.toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
-input[type="search"]{padding:5px 9px;border:.5px solid var(--border);border-radius:var(--r);font-size:12px;background:var(--bg);color:var(--text);width:175px;}
-select.filter{font-size:12px;padding:5px 8px;border-radius:var(--r);border:.5px solid var(--border);background:var(--bg);color:var(--text);}
-a{color:var(--in-tx);}
-.empty{text-align:center;padding:2.5rem;color:var(--text2);}
-.empty i{font-size:32px;display:block;margin-bottom:.5rem;}
-.section-title{font-size:13px;font-weight:600;margin-bottom:.75rem;padding-bottom:6px;border-bottom:.5px solid var(--border);}
+.btn{background:var(--bg);border:.5px solid var(--border2);border-radius:var(--r);padding:5px 12px;cursor:pointer;font-size:12px;color:var(--text);display:inline-flex;align-items:center;gap:5px;}.btn:hover{background:var(--bg2);}.btn-connect{background:var(--in-bg);color:var(--in-tx);border-color:var(--in-tx);}.btn-ok{background:var(--ok-bg);color:var(--ok-tx);border-color:var(--ok-tx);}.btn-er{background:var(--er-bg);color:var(--er-tx);border-color:var(--er-tx);}
+.toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;}input[type="search"]{padding:5px 9px;border:.5px solid var(--border);border-radius:var(--r);font-size:12px;background:var(--bg);color:var(--text);width:175px;}select.filter{font-size:12px;padding:5px 8px;border-radius:var(--r);border:.5px solid var(--border);background:var(--bg);color:var(--text);}a{color:var(--in-tx);}
+.empty{text-align:center;padding:2.5rem;color:var(--text2);}.empty i{font-size:32px;display:block;margin-bottom:.5rem;}.section-title{font-size:13px;font-weight:600;margin-bottom:.75rem;padding-bottom:6px;border-bottom:.5px solid var(--border);}
 .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--ok-bg);color:var(--ok-tx);border-radius:var(--r);padding:8px 16px;font-size:13px;font-weight:500;display:none;z-index:999;border:.5px solid var(--ok-tx);}
-</style>
-</head>
-<body>
+</style></head><body>
 <div id="app">
-  <header>
-    <h1><i class="ti ti-phone-call" style="font-size:20px"></i>Canais &amp; Rotas <small>DDM — Olos</small></h1>
-    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-      <span class="sync-badge sync-off" id="sync-status"><i class="ti ti-cloud-off" style="font-size:13px"></i><span id="sync-txt">Não conectado</span></span>
-      <button class="btn" id="btn-sync" onclick="manualSync()" style="display:none"><i class="ti ti-refresh"></i>Sincronizar</button>
-      <button class="btn btn-connect" id="btn-connect" onclick="conectar()"><i class="ti ti-brand-google"></i>Conectar Sheets</button>
-      <button class="btn" id="btn-disconnect" onclick="desconectar()" style="display:none"><i class="ti ti-logout"></i>Sair</button>
-      <button class="btn" onclick="createBackup()"><i class="ti ti-device-floppy"></i>Backup</button>
-      <button class="btn" onclick="exportCSV()"><i class="ti ti-download"></i>CSV</button>
+<header>
+  <h1><i class="ti ti-phone-call" style="font-size:20px"></i>Canais &amp; Rotas <small>DDM — Olos</small></h1>
+  <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+    <span class="sync-badge sync-off" id="sync-status"><i class="ti ti-cloud-off" style="font-size:13px"></i><span id="sync-txt">Não conectado</span></span>
+    <button class="btn" id="btn-sync" onclick="manualSync()" style="display:none"><i class="ti ti-refresh"></i>Sincronizar</button>
+    <button class="btn btn-connect" id="btn-connect" onclick="conectar()"><i class="ti ti-brand-google"></i>Conectar Sheets</button>
+    <button class="btn" id="btn-disconnect" onclick="desconectar()" style="display:none"><i class="ti ti-logout"></i>Sair</button>
+    <button class="btn" onclick="createBackup()"><i class="ti ti-device-floppy"></i>Backup</button>
+    <button class="btn" onclick="exportCSV()"><i class="ti ti-download"></i>CSV</button>
+  </div>
+</header>
+<div class="stat-grid" id="sg"></div>
+<div class="alerts-wrap" id="alerts-wrap" style="display:none">
+  <div class="alerts-header" onclick="toggleAlerts()">
+    <i class="ti ti-alert-triangle" style="font-size:14px"></i>
+    <span id="alerts-count-txt" style="font-size:12px;font-weight:500"></span>
+    <i class="ti ti-chevron-down" id="alerts-chevron" style="font-size:13px;margin-left:auto;transition:transform .2s"></i>
+  </div>
+  <div class="alerts-body" id="alerts-body"></div>
+</div>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="showTab('campanhas',this)"><i class="ti ti-table"></i>Campanhas</button>
+  <button class="tab-btn" onclick="showTab('rotas',this)"><i class="ti ti-route"></i>Rotas</button>
+  <button class="tab-btn" id="tbc" onclick="showTab('checklist',this)"><i class="ti ti-list-check"></i>Checklist Olos</button>
+  <button class="tab-btn" onclick="showTab('log',this)"><i class="ti ti-history"></i>Log &amp; Backups</button>
+</div>
+<div class="tab-panel active" id="tab-campanhas">
+  <div class="toolbar">
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <input type="search" id="fi" placeholder="Filtrar campanhas..." oninput="renderTable()"/>
+      <select class="filter" id="fr" onchange="renderTable()"><option value="">Todas as rotas</option></select>
     </div>
-  </header>
-  <div class="stat-grid" id="sg"></div>
-  <div class="alerts-wrap" id="alerts-wrap" style="display:none">
-    <div class="alerts-header" onclick="toggleAlerts()">
-      <i class="ti ti-alert-triangle" style="font-size:14px"></i>
-      <span id="alerts-count-txt" style="font-size:12px;font-weight:500"></span>
-      <i class="ti ti-chevron-down" id="alerts-chevron" style="font-size:13px;margin-left:auto;transition:transform .2s"></i>
-    </div>
-    <div class="alerts-body" id="alerts-body"></div>
+    <button class="btn" onclick="addCampaign()"><i class="ti ti-plus"></i>Nova campanha</button>
   </div>
-  <div class="tab-bar">
-    <button class="tab-btn active" onclick="showTab('campanhas',this)"><i class="ti ti-table"></i>Campanhas</button>
-    <button class="tab-btn" onclick="showTab('rotas',this)"><i class="ti ti-route"></i>Rotas</button>
-    <button class="tab-btn" id="tbc" onclick="showTab('checklist',this)"><i class="ti ti-list-check"></i>Checklist Olos</button>
-    <button class="tab-btn" onclick="showTab('log',this)"><i class="ti ti-history"></i>Log &amp; Backups</button>
-  </div>
-  <div class="tab-panel active" id="tab-campanhas">
-    <div class="toolbar">
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <input type="search" id="fi" placeholder="Filtrar campanhas..." oninput="renderTable()"/>
-        <select class="filter" id="fr" onchange="renderTable()"><option value="">Todas as rotas</option></select>
-      </div>
-      <button class="btn" onclick="addCampaign()"><i class="ti ti-plus"></i>Nova campanha</button>
-    </div>
-    <div class="tw"><table>
-      <thead><tr>
-        <th style="width:190px">Campanha</th><th style="width:52px;text-align:center">Ativo</th>
-        <th style="width:85px">Solicitado</th><th style="width:78px">Alocado</th>
-        <th style="width:68px">Saldo</th><th style="width:145px">Rota</th>
-        <th style="width:82px">Máx.Canais</th><th style="width:32px"></th>
-      </tr></thead>
-      <tbody id="tb"></tbody>
-    </table></div>
-  </div>
-  <div class="tab-panel" id="tab-rotas">
-    <div class="section-title">Utilização por rota</div>
-    <div class="rg" id="rg"></div>
-    <div class="section-title">Gerenciar rotas</div>
-    <div id="routes-manage"></div>
-    <button class="btn" onclick="addRoute()" style="margin-top:8px"><i class="ti ti-plus"></i>Adicionar rota</button>
-  </div>
-  <div class="tab-panel" id="tab-checklist"><div id="cl"></div></div>
-  <div class="tab-panel" id="tab-log">
-    <div class="section-title">Backups salvos</div>
-    <div id="backups-list"></div>
-    <div class="section-title" style="margin-top:1.25rem">Log de alterações</div>
-    <div id="lg"></div>
-  </div>
+  <div class="tw"><table><thead><tr>
+    <th style="width:190px">Campanha</th><th style="width:52px;text-align:center">Ativo</th>
+    <th style="width:85px">Solicitado</th><th style="width:78px">Alocado</th>
+    <th style="width:68px">Saldo</th><th style="width:145px">Rota</th>
+    <th style="width:82px">Máx.Canais</th><th style="width:32px"></th>
+  </tr></thead><tbody id="tb"></tbody></table></div>
+</div>
+<div class="tab-panel" id="tab-rotas">
+  <div class="section-title">Utilização por rota</div><div class="rg" id="rg"></div>
+  <div class="section-title">Gerenciar rotas</div><div id="routes-manage"></div>
+  <button class="btn" onclick="addRoute()" style="margin-top:8px"><i class="ti ti-plus"></i>Adicionar rota</button>
+</div>
+<div class="tab-panel" id="tab-checklist"><div id="cl"></div></div>
+<div class="tab-panel" id="tab-log">
+  <div class="section-title">Backups salvos</div><div id="backups-list"></div>
+  <div class="section-title" style="margin-top:1.25rem">Log de alterações</div><div id="lg"></div>
+</div>
 </div>
 <div class="toast" id="toast"></div>
 <script>
@@ -162,57 +87,8 @@ const CLIENT_ID='724008884935-pjuskq1buf63m2brcld11jlpjfok81pr.apps.googleuserco
 const SHEET_ID='1KTte3ETz2cCWNcWaeNS0Asm71Zsc9IOaKBCONi0KETg';
 const SCOPE='https://www.googleapis.com/auth/spreadsheets';
 const SHEET_CAMP='CAMPANHAS!A2:G300';const SHEET_LOG='LOG!A:F';
-const DEFAULT_ROUTES=[
-  {nome:'NENHUMA',cap:0},{nome:'PONTALTECH',cap:159},{nome:'VONEX',cap:193},
-  {nome:'NEWVOICE',cap:20},{nome:'NEWVOICE_BM',cap:70},{nome:'R1',cap:42},
-  {nome:'OKTOR_ALTA',cap:40},{nome:'GOSAT',cap:0},{nome:'VAPI',cap:0},
-  {nome:'RETELL',cap:3},{nome:'LOGIN_NOT_EXT',cap:50},{nome:'SIPWAY',cap:18},{nome:'LCR_OLOS',cap:3}
-];
-const BD=[
-  {id:1,nome:'AD_Preventivo',ativo:true,sol:0,aloc:0,rota:'NENHUMA',max:0},
-  {id:2,nome:'AD_RETELL',ativo:true,sol:10,aloc:10,rota:'VONEX',max:10},
-  {id:3,nome:'AD_VAPI',ativo:true,sol:5,aloc:1,rota:'PONTALTECH',max:5},
-  {id:4,nome:'ADA_Template_Cobranca',ativo:true,sol:0,aloc:1,rota:'NENHUMA',max:1},
-  {id:5,nome:'ADA_Template_Vendas',ativo:true,sol:0,aloc:1,rota:'NENHUMA',max:1},
-  {id:6,nome:'Anima_Ativo',ativo:true,sol:48,aloc:48,rota:'PONTALTECH',max:48},
-  {id:7,nome:'Anima_Manual',ativo:true,sol:5,aloc:5,rota:'PONTALTECH',max:5},
-  {id:8,nome:'Ativo_olos',ativo:true,sol:4,aloc:0,rota:'PONTALTECH',max:4},
-  {id:9,nome:'Campanha_WAY',ativo:true,sol:2,aloc:0,rota:'VONEX',max:2},
-  {id:10,nome:'Cedae',ativo:true,sol:10,aloc:10,rota:'R1',max:10},
-  {id:11,nome:'Cedae Manual',ativo:true,sol:2,aloc:0,rota:'R1',max:2},
-  {id:12,nome:'Cruzeiro_Ativo',ativo:true,sol:65,aloc:65,rota:'PONTALTECH',max:65},
-  {id:13,nome:'Cruzeiro_Nao_Alo',ativo:true,sol:10,aloc:10,rota:'R1',max:10},
-  {id:14,nome:'Cruzeiro_Manual',ativo:true,sol:5,aloc:5,rota:'PONTALTECH',max:5},
-  {id:15,nome:'Datora',ativo:true,sol:5,aloc:5,rota:'NEWVOICE_BM',max:5},
-  {id:16,nome:'Datora_Manual',ativo:true,sol:0,aloc:2,rota:'NEWVOICE_BM',max:2},
-  {id:17,nome:'Educacional Manual',ativo:true,sol:5,aloc:5,rota:'NEWVOICE',max:5},
-  {id:18,nome:'Educacional Q1',ativo:true,sol:15,aloc:15,rota:'PONTALTECH',max:15},
-  {id:19,nome:'Educacional Q2',ativo:true,sol:10,aloc:10,rota:'NEWVOICE',max:10},
-  {id:20,nome:'Educacional Q3',ativo:true,sol:8,aloc:8,rota:'NEWVOICE_BM',max:8},
-  {id:21,nome:'Empresarial_Ativo',ativo:true,sol:10,aloc:10,rota:'R1',max:10},
-  {id:22,nome:'Empresarial_Manual',ativo:true,sol:2,aloc:2,rota:'R1',max:2},
-  {id:23,nome:'Isaac Ativo Inativo',ativo:true,sol:20,aloc:20,rota:'OKTOR_ALTA',max:20},
-  {id:24,nome:'Isaac Ativo Inativo Manual',ativo:true,sol:2,aloc:2,rota:'NEWVOICE',max:2},
-  {id:25,nome:'Isaac Inativo Manual',ativo:true,sol:3,aloc:3,rota:'NEWVOICE',max:3},
-  {id:26,nome:'Isaac_Ativo',ativo:true,sol:28,aloc:28,rota:'NEWVOICE_BM',max:28},
-  {id:27,nome:'Isaac_Inativo',ativo:true,sol:35,aloc:20,rota:'OKTOR_ALTA',max:35},
-  {id:28,nome:'Light',ativo:true,sol:10,aloc:10,rota:'R1',max:10},
-  {id:29,nome:'Locator_CPF_Template',ativo:true,sol:0,aloc:0,rota:'NENHUMA',max:0},
-  {id:30,nome:'Locator_Template',ativo:true,sol:0,aloc:1,rota:'NENHUMA',max:1},
-  {id:31,nome:'Manual',ativo:true,sol:1,aloc:1,rota:'NEWVOICE_BM',max:1},
-  {id:32,nome:'Salta Educação',ativo:true,sol:26,aloc:26,rota:'NEWVOICE_BM',max:26},
-  {id:33,nome:'Todos Agentes',ativo:true,sol:1,aloc:0,rota:'PONTALTECH',max:1},
-  {id:34,nome:'Vero_Churn',ativo:true,sol:30,aloc:30,rota:'VONEX',max:30},
-  {id:35,nome:'Vero_Manual',ativo:true,sol:0,aloc:0,rota:'NEWVOICE_BM',max:0},
-  {id:36,nome:'Vero_PreChurn',ativo:true,sol:30,aloc:30,rota:'VONEX',max:30},
-  {id:38,nome:'Way_Ura_Cruzeiro',ativo:true,sol:67,aloc:67,rota:'VONEX',max:67},
-  {id:39,nome:'Way_Ura_Yduqs',ativo:true,sol:28,aloc:28,rota:'VONEX',max:28},
-  {id:40,nome:'Yduqs_Ativo',ativo:true,sol:25,aloc:25,rota:'VONEX',max:25},
-  {id:41,nome:'Yduqs_Manual',ativo:true,sol:3,aloc:3,rota:'VONEX',max:3},
-  {id:42,nome:'LICENÇAS',ativo:true,sol:50,aloc:50,rota:'LOGIN_NOT_EXT',max:50},
-  {id:43,nome:'IA DDM',ativo:true,sol:3,aloc:3,rota:'RETELL',max:3},
-  {id:44,nome:'SIP',ativo:false,sol:18,aloc:18,rota:'SIPWAY',max:18}
-];
+const DEFAULT_ROUTES=[{nome:'NENHUMA',cap:0},{nome:'PONTALTECH',cap:159},{nome:'VONEX',cap:193},{nome:'NEWVOICE',cap:20},{nome:'NEWVOICE_BM',cap:70},{nome:'R1',cap:42},{nome:'OKTOR_ALTA',cap:40},{nome:'GOSAT',cap:0},{nome:'VAPI',cap:0},{nome:'RETELL',cap:3},{nome:'LOGIN_NOT_EXT',cap:50},{nome:'SIPWAY',cap:18},{nome:'LCR_OLOS',cap:3}];
+const BD=[{id:1,nome:'AD_Preventivo',ativo:true,sol:0,aloc:0,rota:'NENHUMA',max:0},{id:2,nome:'AD_RETELL',ativo:true,sol:10,aloc:10,rota:'VONEX',max:10},{id:3,nome:'AD_VAPI',ativo:true,sol:5,aloc:1,rota:'PONTALTECH',max:5},{id:4,nome:'ADA_Template_Cobranca',ativo:true,sol:0,aloc:1,rota:'NENHUMA',max:1},{id:5,nome:'ADA_Template_Vendas',ativo:true,sol:0,aloc:1,rota:'NENHUMA',max:1},{id:6,nome:'Anima_Ativo',ativo:true,sol:48,aloc:48,rota:'PONTALTECH',max:48},{id:7,nome:'Anima_Manual',ativo:true,sol:5,aloc:5,rota:'PONTALTECH',max:5},{id:8,nome:'Ativo_olos',ativo:true,sol:4,aloc:0,rota:'PONTALTECH',max:4},{id:9,nome:'Campanha_WAY',ativo:true,sol:2,aloc:0,rota:'VONEX',max:2},{id:10,nome:'Cedae',ativo:true,sol:10,aloc:10,rota:'R1',max:10},{id:11,nome:'Cedae Manual',ativo:true,sol:2,aloc:0,rota:'R1',max:2},{id:12,nome:'Cruzeiro_Ativo',ativo:true,sol:65,aloc:65,rota:'PONTALTECH',max:65},{id:13,nome:'Cruzeiro_Nao_Alo',ativo:true,sol:10,aloc:10,rota:'R1',max:10},{id:14,nome:'Cruzeiro_Manual',ativo:true,sol:5,aloc:5,rota:'PONTALTECH',max:5},{id:15,nome:'Datora',ativo:true,sol:5,aloc:5,rota:'NEWVOICE_BM',max:5},{id:16,nome:'Datora_Manual',ativo:true,sol:0,aloc:2,rota:'NEWVOICE_BM',max:2},{id:17,nome:'Educacional Manual',ativo:true,sol:5,aloc:5,rota:'NEWVOICE',max:5},{id:18,nome:'Educacional Q1',ativo:true,sol:15,aloc:15,rota:'PONTALTECH',max:15},{id:19,nome:'Educacional Q2',ativo:true,sol:10,aloc:10,rota:'NEWVOICE',max:10},{id:20,nome:'Educacional Q3',ativo:true,sol:8,aloc:8,rota:'NEWVOICE_BM',max:8},{id:21,nome:'Empresarial_Ativo',ativo:true,sol:10,aloc:10,rota:'R1',max:10},{id:22,nome:'Empresarial_Manual',ativo:true,sol:2,aloc:2,rota:'R1',max:2},{id:23,nome:'Isaac Ativo Inativo',ativo:true,sol:20,aloc:20,rota:'OKTOR_ALTA',max:20},{id:24,nome:'Isaac Ativo Inativo Manual',ativo:true,sol:2,aloc:2,rota:'NEWVOICE',max:2},{id:25,nome:'Isaac Inativo Manual',ativo:true,sol:3,aloc:3,rota:'NEWVOICE',max:3},{id:26,nome:'Isaac_Ativo',ativo:true,sol:28,aloc:28,rota:'NEWVOICE_BM',max:28},{id:27,nome:'Isaac_Inativo',ativo:true,sol:35,aloc:20,rota:'OKTOR_ALTA',max:35},{id:28,nome:'Light',ativo:true,sol:10,aloc:10,rota:'R1',max:10},{id:29,nome:'Locator_CPF_Template',ativo:true,sol:0,aloc:0,rota:'NENHUMA',max:0},{id:30,nome:'Locator_Template',ativo:true,sol:0,aloc:1,rota:'NENHUMA',max:1},{id:31,nome:'Manual',ativo:true,sol:1,aloc:1,rota:'NEWVOICE_BM',max:1},{id:32,nome:'Salta Educação',ativo:true,sol:26,aloc:26,rota:'NEWVOICE_BM',max:26},{id:33,nome:'Todos Agentes',ativo:true,sol:1,aloc:0,rota:'PONTALTECH',max:1},{id:34,nome:'Vero_Churn',ativo:true,sol:30,aloc:30,rota:'VONEX',max:30},{id:35,nome:'Vero_Manual',ativo:true,sol:0,aloc:0,rota:'NEWVOICE_BM',max:0},{id:36,nome:'Vero_PreChurn',ativo:true,sol:30,aloc:30,rota:'VONEX',max:30},{id:37,nome:'Way_Ura_Anima',ativo:true,sol:20,aloc:20,rota:'PONTALTECH',max:20},{id:38,nome:'Way_Ura_Cruzeiro',ativo:true,sol:67,aloc:67,rota:'VONEX',max:67},{id:39,nome:'Way_Ura_Yduqs',ativo:true,sol:28,aloc:28,rota:'VONEX',max:28},{id:40,nome:'Yduqs_Ativo',ativo:true,sol:25,aloc:25,rota:'VONEX',max:25},{id:41,nome:'Yduqs_Manual',ativo:true,sol:3,aloc:3,rota:'VONEX',max:3},{id:42,nome:'LICENÇAS',ativo:true,sol:50,aloc:50,rota:'LOGIN_NOT_EXT',max:50},{id:43,nome:'IA DDM',ativo:true,sol:3,aloc:3,rota:'RETELL',max:3},{id:44,nome:'SIP',ativo:false,sol:18,aloc:18,rota:'SIPWAY',max:18}];
 let S={campaigns:JSON.parse(JSON.stringify(BD)),routes:JSON.parse(JSON.stringify(DEFAULT_ROUTES)),log:[],pending:[],backups:[]};
 let nid=45,accessToken=null,tokenExpiry=0,syncDebounce=null,tokenClient=null,gisReady=false,alertsOpen=false;
 const LS_KEY='cr-ddm-v3';
@@ -242,7 +118,7 @@ function createBackup(){const b={ts:new Date().toISOString(),campaigns:JSON.pars
 function restoreBackup(idx){const b=S.backups[idx];if(!b)return;const dt=new Date(b.ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});if(!confirm(`Restaurar backup de ${dt}?\n\nSobrescreve os dados atuais.`))return;createBackup();S.campaigns=JSON.parse(JSON.stringify(b.campaigns));if(b.routes)S.routes=JSON.parse(JSON.stringify(b.routes));lsSave();if(tokenValid())writeToSheets();renderAll();showToast('Backup restaurado');}
 function deleteBackup(idx){if(!confirm('Remover este backup?'))return;S.backups.splice(idx,1);lsSave();renderBackups();}
 function addRoute(){const nome=prompt('Nome da nova rota:');if(!nome||!nome.trim())return;const nomeUp=nome.trim().toUpperCase();if(S.routes.find(r=>r.nome===nomeUp)){alert('Rota já existe.');return;}const cap=parseInt(prompt('Capacidade (0 se desconhecido):','0'))||0;S.routes.push({nome:nomeUp,cap});lsSave();renderAll();showToast(`Rota ${nomeUp} adicionada`);}
-function deleteRoute(nome){if(nome==='NENHUMA'){alert('Esta rota não pode ser removida.');return;}if(S.campaigns.some(c=>c.rota===nome)){alert(`A rota ${nome} está em uso.`);return;}if(!confirm(`Remover ${nome}?`))return;S.routes=S.routes.filter(r=>r.nome!==nome);lsSave();renderAll();}
+function deleteRoute(nome){if(nome==='NENHUMA'){alert('Não pode ser removida.');return;}if(S.campaigns.some(c=>c.rota===nome)){alert(`${nome} está em uso.`);return;}if(!confirm(`Remover ${nome}?`))return;S.routes=S.routes.filter(r=>r.nome!==nome);lsSave();renderAll();}
 function updateRouteCap(nome,val){const r=S.routes.find(x=>x.nome===nome);if(r)r.cap=+val;lsSave();rRoutes();}
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2500);}
 function toggleAlerts(){alertsOpen=!alertsOpen;document.getElementById('alerts-body').classList.toggle('open',alertsOpen);document.getElementById('alerts-chevron').style.transform=alertsOpen?'rotate(180deg)':'';}
@@ -262,6 +138,4 @@ function exportCSV(){const csv=['Campanha,Ativo,Solicitado,Alocado,Saldo,Rota,M�
 function showTab(tab,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+tab).classList.add('active');if(tab==='checklist')document.getElementById('tbc').style.color='';}
 function renderAll(){rStats();rAlerts();rTable();rRoutes();rChecklist();renderBackups();rLog();}
 lsLoad();renderAll();waitForGIS(initGIS);
-</script>
-</body>
-</html>
+</script></body></html>
