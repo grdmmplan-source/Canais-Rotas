@@ -29,7 +29,7 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;background:var(--bg3);color:var(--text);min-height:100vh;}
 #app{max-width:1120px;margin:0 auto;padding:1.25rem 1rem 3rem;}
-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:8px;}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px;}
 h1{font-size:17px;font-weight:600;display:flex;align-items:center;gap:8px;}
 h1 small{font-size:12px;font-weight:400;color:var(--text2);}
 .sync-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:4px 10px;border-radius:20px;border:.5px solid var(--border2);}
@@ -37,10 +37,19 @@ h1 small{font-size:12px;font-weight:400;color:var(--text2);}
 .sync-ing{background:var(--wn-bg);color:var(--wn-tx);}
 .sync-err{background:var(--er-bg);color:var(--er-tx);}
 .sync-off{background:var(--bg2);color:var(--text2);}
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:1rem;}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:.75rem;}
 .stat-card{background:var(--bg);border:.5px solid var(--border);border-radius:var(--r);padding:10px 12px;}
 .stat-label{font-size:11px;color:var(--text2);margin-bottom:3px;letter-spacing:.04em;}
 .stat-val{font-size:20px;font-weight:600;font-family:'Courier New',monospace;}
+.alerts-wrap{margin-bottom:.75rem;}
+.alerts-header{display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 10px;border-radius:var(--r);background:var(--bg2);border:.5px solid var(--border);user-select:none;}
+.alerts-header:hover{background:var(--bg3);}
+.alert-badge{font-size:11px;font-weight:600;padding:1px 7px;border-radius:8px;}
+.alerts-body{margin-top:6px;max-height:220px;overflow-y:auto;display:none;}
+.alerts-body.open{display:block;}
+.alert-row{border-radius:var(--r);padding:6px 10px;margin-bottom:4px;font-size:12px;display:flex;align-items:center;gap:7px;}
+.al-er{background:var(--er-bg);color:var(--er-tx);}
+.al-wn{background:var(--wn-bg);color:var(--wn-tx);}
 .tab-bar{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:1rem;}
 .tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:8px 13px;cursor:pointer;font-size:13px;color:var(--text2);margin-bottom:-1px;display:flex;align-items:center;gap:5px;}
 .tab-btn:hover{color:var(--text);}
@@ -59,11 +68,8 @@ tr:hover td{background:var(--bg2);}
 .pill-er{background:var(--er-bg);color:var(--er-tx);}
 .ei{background:var(--bg);border:.5px solid var(--border2);border-radius:4px;padding:2px 5px;width:58px;font-size:12px;font-family:'Courier New',monospace;color:var(--text);}
 .rs{background:var(--bg);border:.5px solid var(--border2);border-radius:4px;padding:2px 5px;font-size:11px;color:var(--text);max-width:130px;}
-.alert-row{border-radius:var(--r);padding:7px 11px;margin-bottom:6px;font-size:12px;display:flex;align-items:center;gap:7px;}
-.al-er{background:var(--er-bg);color:var(--er-tx);}
-.al-wn{background:var(--wn-bg);color:var(--wn-tx);}
-.rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px;}
-.rc{background:var(--bg);border:.5px solid var(--border);border-radius:var(--r);padding:12px 13px;}
+.rg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:1.5rem;}
+.rc{background:var(--bg);border:.5px solid var(--border);border-radius:var(--r);padding:12px 13px;position:relative;}
 .rn{font-size:11px;font-weight:600;margin-bottom:3px;}
 .rv{font-size:19px;font-weight:600;font-family:'Courier New',monospace;}
 .rpb{height:4px;background:var(--border);border-radius:2px;margin-top:6px;}
@@ -73,42 +79,49 @@ tr:hover td{background:var(--bg2);}
 .sn{width:22px;height:22px;border-radius:50%;background:var(--in-bg);color:var(--in-tx);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .le{display:flex;gap:10px;padding:7px 0;border-bottom:.5px solid var(--border);font-size:11px;}
 .lts{color:var(--text3);font-family:'Courier New',monospace;min-width:105px;flex-shrink:0;}
+.bk-row{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border:.5px solid var(--border);border-radius:var(--r);margin-bottom:6px;font-size:12px;}
 .btn{background:var(--bg);border:.5px solid var(--border2);border-radius:var(--r);padding:5px 12px;cursor:pointer;font-size:12px;color:var(--text);display:inline-flex;align-items:center;gap:5px;}
 .btn:hover{background:var(--bg2);}
 .btn-connect{background:var(--in-bg);color:var(--in-tx);border-color:var(--in-tx);}
+.btn-ok{background:var(--ok-bg);color:var(--ok-tx);border-color:var(--ok-tx);}
+.btn-er{background:var(--er-bg);color:var(--er-tx);border-color:var(--er-tx);}
 .toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
 input[type="search"]{padding:5px 9px;border:.5px solid var(--border);border-radius:var(--r);font-size:12px;background:var(--bg);color:var(--text);width:175px;}
 select.filter{font-size:12px;padding:5px 8px;border-radius:var(--r);border:.5px solid var(--border);background:var(--bg);color:var(--text);}
 a{color:var(--in-tx);}
 .empty{text-align:center;padding:2.5rem;color:var(--text2);}
 .empty i{font-size:32px;display:block;margin-bottom:.5rem;}
-.cfg-banner{background:var(--wn-bg);color:var(--wn-tx);border-radius:var(--r);padding:10px 14px;margin-bottom:1rem;font-size:12px;display:flex;align-items:center;gap:8px;}
+.section-title{font-size:13px;font-weight:600;margin-bottom:.75rem;padding-bottom:6px;border-bottom:.5px solid var(--border);}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--ok-bg);color:var(--ok-tx);border-radius:var(--r);padding:8px 16px;font-size:13px;font-weight:500;display:none;z-index:999;border:.5px solid var(--ok-tx);}
 </style>
 </head>
 <body>
 <div id="app">
   <header>
     <h1><i class="ti ti-phone-call" style="font-size:20px"></i>Canais &amp; Rotas <small>DDM — Olos</small></h1>
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
       <span class="sync-badge sync-off" id="sync-status"><i class="ti ti-cloud-off" style="font-size:13px"></i><span id="sync-txt">Não conectado</span></span>
       <button class="btn" id="btn-sync" onclick="manualSync()" style="display:none"><i class="ti ti-refresh"></i>Sincronizar</button>
       <button class="btn btn-connect" id="btn-connect" onclick="conectar()"><i class="ti ti-brand-google"></i>Conectar Sheets</button>
       <button class="btn" id="btn-disconnect" onclick="desconectar()" style="display:none"><i class="ti ti-logout"></i>Sair</button>
+      <button class="btn" onclick="createBackup()"><i class="ti ti-device-floppy"></i>Backup</button>
       <button class="btn" onclick="exportCSV()"><i class="ti ti-download"></i>CSV</button>
-      <button class="btn" onclick="resetData()" title="Restaurar dados originais"><i class="ti ti-refresh"></i>Resetar</button>
     </div>
   </header>
-  <div class="cfg-banner" id="cfg-banner" style="display:none">
-    <i class="ti ti-settings"></i>
-    <span><strong>Configuração necessária:</strong> edite o arquivo <code>index.html</code> e preencha <code>CLIENT_ID</code> e <code>SHEET_ID</code>.</span>
-  </div>
   <div class="stat-grid" id="sg"></div>
-  <div id="ac"></div>
+  <div class="alerts-wrap" id="alerts-wrap" style="display:none">
+    <div class="alerts-header" onclick="toggleAlerts()">
+      <i class="ti ti-alert-triangle" style="font-size:14px"></i>
+      <span id="alerts-count-txt" style="font-size:12px;font-weight:500"></span>
+      <i class="ti ti-chevron-down" id="alerts-chevron" style="font-size:13px;margin-left:auto;transition:transform .2s"></i>
+    </div>
+    <div class="alerts-body" id="alerts-body"></div>
+  </div>
   <div class="tab-bar">
     <button class="tab-btn active" onclick="showTab('campanhas',this)"><i class="ti ti-table"></i>Campanhas</button>
     <button class="tab-btn" onclick="showTab('rotas',this)"><i class="ti ti-route"></i>Rotas</button>
     <button class="tab-btn" id="tbc" onclick="showTab('checklist',this)"><i class="ti ti-list-check"></i>Checklist Olos</button>
-    <button class="tab-btn" onclick="showTab('log',this)"><i class="ti ti-history"></i>Log</button>
+    <button class="tab-btn" onclick="showTab('log',this)"><i class="ti ti-history"></i>Log &amp; Backups</button>
   </div>
   <div class="tab-panel active" id="tab-campanhas">
     <div class="toolbar">
@@ -120,7 +133,7 @@ a{color:var(--in-tx);}
     </div>
     <div class="tw"><table>
       <thead><tr>
-        <th style="width:195px">Campanha</th><th style="width:52px;text-align:center">Ativo</th>
+        <th style="width:190px">Campanha</th><th style="width:52px;text-align:center">Ativo</th>
         <th style="width:85px">Solicitado</th><th style="width:78px">Alocado</th>
         <th style="width:68px">Saldo</th><th style="width:145px">Rota</th>
         <th style="width:82px">Máx.Canais</th><th style="width:32px"></th>
@@ -128,23 +141,39 @@ a{color:var(--in-tx);}
       <tbody id="tb"></tbody>
     </table></div>
   </div>
-  <div class="tab-panel" id="tab-rotas"><div class="rg" id="rg"></div></div>
+  <div class="tab-panel" id="tab-rotas">
+    <div class="section-title">Utilização por rota</div>
+    <div class="rg" id="rg"></div>
+    <div class="section-title">Gerenciar rotas</div>
+    <div id="routes-manage"></div>
+    <button class="btn" onclick="addRoute()" style="margin-top:8px"><i class="ti ti-plus"></i>Adicionar rota</button>
+  </div>
   <div class="tab-panel" id="tab-checklist"><div id="cl"></div></div>
-  <div class="tab-panel" id="tab-log"><div id="lg"></div></div>
+  <div class="tab-panel" id="tab-log">
+    <div class="section-title">Backups salvos</div>
+    <div id="backups-list"></div>
+    <div class="section-title" style="margin-top:1.25rem">Log de alterações</div>
+    <div id="lg"></div>
+  </div>
 </div>
+<div class="toast" id="toast"></div>
 <script>
 const CLIENT_ID='724008884935-pjuskq1buf63m2brcld11jlpjfok81pr.apps.googleusercontent.com';
 const SHEET_ID='1KTte3ETz2cCWNcWaeNS0Asm71Zsc9IOaKBCONi0KETg';
 const SCOPE='https://www.googleapis.com/auth/spreadsheets';
 const SHEET_CAMP='CAMPANHAS!A2:G300';const SHEET_LOG='LOG!A:F';
-const RL=['NENHUMA','VONEX','PONTALTECH','LOGIN_NOT_EXT','R1','OKTOR_ALTA','NEWVOICE_BM','NEWVOICE','SIPWAY','LCR_OLOS','RETELL','VAPI'];
-const RC={VONEX:193,PONTALTECH:184,LOGIN_NOT_EXT:50,R1:42,OKTOR_ALTA:40,NEWVOICE_BM:32,NEWVOICE:20,SIPWAY:18,LCR_OLOS:3,RETELL:3,NENHUMA:0,VAPI:4};
+const DEFAULT_ROUTES=[
+  {nome:'NENHUMA',cap:0},{nome:'PONTALTECH',cap:184},{nome:'VONEX',cap:193},
+  {nome:'NEWVOICE',cap:20},{nome:'NEWVOICE_BM',cap:32},{nome:'R1',cap:42},
+  {nome:'OKTOR_ALTA',cap:40},{nome:'GOSAT',cap:0},{nome:'VAPI',cap:4},
+  {nome:'RETELL',cap:3},{nome:'LOGIN_NOT_EXT',cap:50},{nome:'SIPWAY',cap:18}
+];
 const BD=[
   {id:1,nome:'AD_Preventivo',ativo:true,sol:0,aloc:0,rota:'NENHUMA',max:0},
   {id:2,nome:'AD_RETELL',ativo:true,sol:10,aloc:10,rota:'VONEX',max:10},
   {id:3,nome:'AD_VAPI',ativo:true,sol:5,aloc:1,rota:'PONTALTECH',max:5},
-  {id:4,nome:'ADA_Template_Cobranca',ativo:true,sol:0,aloc:1,rota:'LCR_OLOS',max:1},
-  {id:5,nome:'ADA_Template_Vendas',ativo:true,sol:0,aloc:1,rota:'LCR_OLOS',max:1},
+  {id:4,nome:'ADA_Template_Cobranca',ativo:true,sol:0,aloc:1,rota:'NENHUMA',max:1},
+  {id:5,nome:'ADA_Template_Vendas',ativo:true,sol:0,aloc:1,rota:'NENHUMA',max:1},
   {id:6,nome:'Anima_Ativo',ativo:true,sol:48,aloc:48,rota:'PONTALTECH',max:48},
   {id:7,nome:'Anima_Manual',ativo:true,sol:5,aloc:5,rota:'PONTALTECH',max:5},
   {id:8,nome:'Ativo_olos',ativo:true,sol:4,aloc:0,rota:'PONTALTECH',max:4},
@@ -168,8 +197,8 @@ const BD=[
   {id:26,nome:'Isaac_Ativo',ativo:true,sol:24,aloc:24,rota:'NEWVOICE_BM',max:24},
   {id:27,nome:'Isaac_Inativo',ativo:true,sol:35,aloc:20,rota:'OKTOR_ALTA',max:35},
   {id:28,nome:'Light',ativo:true,sol:10,aloc:10,rota:'R1',max:10},
-  {id:29,nome:'Locator_CPF_Template',ativo:true,sol:0,aloc:0,rota:'LCR_OLOS',max:0},
-  {id:30,nome:'Locator_Template',ativo:true,sol:0,aloc:1,rota:'LCR_OLOS',max:1},
+  {id:29,nome:'Locator_CPF_Template',ativo:true,sol:0,aloc:0,rota:'NENHUMA',max:0},
+  {id:30,nome:'Locator_Template',ativo:true,sol:0,aloc:1,rota:'NENHUMA',max:1},
   {id:31,nome:'Manual',ativo:true,sol:1,aloc:1,rota:'NEWVOICE_BM',max:1},
   {id:32,nome:'Salta Educação',ativo:true,sol:20,aloc:20,rota:'PONTALTECH',max:20},
   {id:33,nome:'Todos Agentes',ativo:true,sol:1,aloc:0,rota:'PONTALTECH',max:1},
@@ -185,45 +214,273 @@ const BD=[
   {id:43,nome:'IA DDM',ativo:true,sol:3,aloc:3,rota:'RETELL',max:3},
   {id:44,nome:'SIP',ativo:false,sol:18,aloc:18,rota:'SIPWAY',max:18}
 ];
-let S={campaigns:JSON.parse(JSON.stringify(BD)),log:[],pending:[]};
-let nid=45,accessToken=null,tokenExpiry=0,syncDebounce=null,tokenClient=null,gisReady=false;
-const LS_KEY='cr-ddm-v2';
-function lsLoad(){try{const d=JSON.parse(localStorage.getItem(LS_KEY));if(d){if(d.c)S.campaigns=d.c;if(d.l)S.log=d.l;if(d.p)S.pending=d.p;if(d.n)nid=d.n;}}catch(e){}}
-function lsSave(){try{localStorage.setItem(LS_KEY,JSON.stringify({c:S.campaigns,l:S.log,p:S.pending,n:nid}));}catch(e){}}
+let S={campaigns:JSON.parse(JSON.stringify(BD)),routes:JSON.parse(JSON.stringify(DEFAULT_ROUTES)),log:[],pending:[],backups:[]};
+let nid=45,accessToken=null,tokenExpiry=0,syncDebounce=null,tokenClient=null,gisReady=false,alertsOpen=false;
+const LS_KEY='cr-ddm-v3';
+function lsLoad(){try{const d=JSON.parse(localStorage.getItem(LS_KEY));if(d){if(d.c)S.campaigns=d.c;if(d.r)S.routes=d.r;if(d.l)S.log=d.l;if(d.p)S.pending=d.p;if(d.b)S.backups=d.b;if(d.n)nid=d.n;}}catch(e){}}
+function lsSave(){try{localStorage.setItem(LS_KEY,JSON.stringify({c:S.campaigns,r:S.routes,l:S.log,p:S.pending,b:S.backups,n:nid}));}catch(e){}}
 function tokenValid(){return accessToken&&Date.now()<tokenExpiry;}
 function storeToken(t,ei){accessToken=t;tokenExpiry=Date.now()+(ei||3600)*1000-60000;localStorage.setItem('goog_tok',JSON.stringify({t,e:tokenExpiry}));}
 function restoreToken(){try{const d=JSON.parse(localStorage.getItem('goog_tok'));if(d&&d.e>Date.now()){accessToken=d.t;tokenExpiry=d.e;return true;}}catch(e){}return false;}
 function clearToken(){accessToken=null;tokenExpiry=0;localStorage.removeItem('goog_tok');}
-async function sheetsGet(range){const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}`,{headers:{Authorization:'Bearer '+accessToken}});if(!r.ok)throw new Error('GET '+r.status);return r.json();}
-async function sheetsPut(range,values){const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?valueInputOption=RAW`,{method:'PUT',headers:{Authorization:'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({values})});if(!r.ok)throw new Error('PUT '+r.status);}
-async function sheetsAppend(range,values){const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,{method:'POST',headers:{Authorization:'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({values})});if(!r.ok)throw new Error('APPEND '+r.status);}
-async function loadFromSheets(){setSyncStatus('ing','Carregando...');try{const res=await sheetsGet(SHEET_CAMP);const rows=(res.values||[]).filter(r=>r[0]&&r[1]);if(rows.length){S.campaigns=rows.map(r=>({id:+r[0]||nid++,nome:r[1]||'',ativo:r[2]==='Sim'||r[2]==='true',sol:+r[3]||0,aloc:+r[4]||0,rota:r[5]||'NENHUMA',max:+r[6]||0}));nid=Math.max(nid,...S.campaigns.map(c=>c.id+1));lsSave();renderAll();setSyncStatus('ok','Sincronizado');}else{setSyncStatus('ing','Planilha vazia — enviando dados...');await writeToSheets();}}catch(e){setSyncStatus('err','Erro ao carregar');console.error(e);}}
-async function writeToSheets(){if(!tokenValid())return;setSyncStatus('ing','Salvando...');try{const rows=S.campaigns.map(c=>[c.id,c.nome,c.ativo?'Sim':'Não',c.sol,c.aloc,c.rota,c.max]);while(rows.length<299)rows.push(['','','','','','','']);await sheetsPut(SHEET_CAMP,rows);setSyncStatus('ok','Sincronizado');}catch(e){setSyncStatus('err','Erro ao salvar');console.error(e);}}
-async function appendLogToSheets(e){if(!tokenValid())return;try{const ts=new Date(e.ts).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'});await sheetsAppend(SHEET_LOG,[[ts,e.campanha,e.campo,e.de,e.para,'app']]);}catch(e){console.error(e);}}
-function setSyncStatus(state,txt){const b=document.getElementById('sync-status');const icon={ok:'ti-cloud-check',ing:'ti-cloud-upload',err:'ti-cloud-x',off:'ti-cloud-off'}[state]||'ti-cloud-off';const cls={ok:'sync-ok',ing:'sync-ing',err:'sync-err',off:'sync-off'}[state]||'sync-off';b.className='sync-badge '+cls;b.innerHTML=`<i class="ti ${icon}" style="font-size:13px"></i><span>${txt}</span>`;}
+async function sheetsGet(r){const x=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(r)}`,{headers:{Authorization:'Bearer '+accessToken}});if(!x.ok)throw new Error('GET '+x.status);return x.json();}
+async function sheetsPut(r,v){const x=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(r)}?valueInputOption=RAW`,{method:'PUT',headers:{Authorization:'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({values:v})});if(!x.ok)throw new Error('PUT '+x.status);}
+async function sheetsAppend(r,v){const x=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(r)}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,{method:'POST',headers:{Authorization:'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({values:v})});if(!x.ok)throw new Error('APPEND '+x.status);}
+async function loadFromSheets(){
+  setSyncStatus('ing','Carregando...');
+  try{
+    const res=await sheetsGet(SHEET_CAMP);
+    const rows=(res.values||[]).filter(r=>r[0]&&r[1]);
+    if(rows.length){
+      S.campaigns=rows.map(r=>({id:+r[0]||nid++,nome:r[1]||'',ativo:r[2]==='Sim'||r[2]==='true',sol:+r[3]||0,aloc:+r[4]||0,rota:r[5]||'NENHUMA',max:+r[6]||0}));
+      nid=Math.max(nid,...S.campaigns.map(c=>c.id+1));
+      lsSave();renderAll();setSyncStatus('ok','Sincronizado');
+    }else{setSyncStatus('ing','Planilha vazia — enviando...');await writeToSheets();}
+  }catch(e){setSyncStatus('err','Erro ao carregar');console.error(e);}
+}
+async function writeToSheets(){
+  if(!tokenValid())return;
+  setSyncStatus('ing','Salvando...');
+  try{
+    const rows=S.campaigns.map(c=>[c.id,c.nome,c.ativo?'Sim':'Não',c.sol,c.aloc,c.rota,c.max]);
+    while(rows.length<299)rows.push(['','','','','','','']);
+    await sheetsPut(SHEET_CAMP,rows);
+    setSyncStatus('ok','Sincronizado');
+  }catch(e){setSyncStatus('err','Erro ao salvar');console.error(e);}
+}
+async function appendLogToSheets(e){
+  if(!tokenValid())return;
+  try{const ts=new Date(e.ts).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'});await sheetsAppend(SHEET_LOG,[[ts,e.campanha,e.campo,e.de,e.para,'app']]);}catch(e){console.error(e);}
+}
+function setSyncStatus(state,txt){
+  const b=document.getElementById('sync-status');
+  const icon={ok:'ti-cloud-check',ing:'ti-cloud-upload',err:'ti-cloud-x',off:'ti-cloud-off'}[state]||'ti-cloud-off';
+  const cls={ok:'sync-ok',ing:'sync-ing',err:'sync-err',off:'sync-off'}[state]||'sync-off';
+  b.className='sync-badge '+cls;
+  b.innerHTML=`<i class="ti ${icon}" style="font-size:13px"></i><span>${txt}</span>`;
+}
 function waitForGIS(cb,t=0){if(typeof google!=='undefined'&&google.accounts){cb();return;}if(t>30)return;setTimeout(()=>waitForGIS(cb,t+1),200);}
-function initGIS(){tokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPE,callback:(resp)=>{if(resp.error){setSyncStatus('err','Erro de autenticação');return;}storeToken(resp.access_token,resp.expires_in);updateAuthUI(true);loadFromSheets();}});gisReady=true;if(restoreToken()){updateAuthUI(true);loadFromSheets();}}
+function initGIS(){
+  tokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPE,callback:(resp)=>{
+    if(resp.error){setSyncStatus('err','Erro de autenticação');return;}
+    storeToken(resp.access_token,resp.expires_in);updateAuthUI(true);loadFromSheets();
+  }});
+  gisReady=true;
+  if(restoreToken()){updateAuthUI(true);loadFromSheets();}
+}
 function conectar(){if(!gisReady){alert('Aguarde...');return;}tokenClient.requestAccessToken({prompt:'consent'});}
 function desconectar(){if(accessToken)google.accounts.oauth2.revoke(accessToken,()=>{});clearToken();updateAuthUI(false);setSyncStatus('off','Não conectado');}
 function manualSync(){loadFromSheets();}
 function updateAuthUI(c){document.getElementById('btn-connect').style.display=c?'none':'';document.getElementById('btn-disconnect').style.display=c?'':'none';document.getElementById('btn-sync').style.display=c?'':'none';if(!c)setSyncStatus('off','Não conectado');}
-function sd(c){return c.aloc-c.sol;}
-function issues(){const r=[];S.campaigns.forEach(c=>{const s=sd(c);if(s<0)r.push({t:'er',n:c.nome,m:`saldo ${s}`});if(c.ativo&&c.rota==='NENHUMA')r.push({t:'wn',n:c.nome,m:'ativa sem rota'});if(c.max>0&&c.aloc>c.max)r.push({t:'er',n:c.nome,m:`alocado(${c.aloc})>máx(${c.max})`});});return r;}
-function rStats(){const tot=Object.values(RC).reduce((a,b)=>a+b,0);const aloc=S.campaigns.reduce((s,c)=>s+c.aloc,0);const iss=issues(),erC=iss.filter(i=>i.t==='er').length;document.getElementById('sg').innerHTML=`<div class="stat-card"><div class="stat-label">Total canais</div><div class="stat-val">${tot}</div></div><div class="stat-card"><div class="stat-label">Alocados</div><div class="stat-val">${aloc}</div></div><div class="stat-card"><div class="stat-label">Livres</div><div class="stat-val" style="color:var(--ok-tx)">${tot-aloc}</div></div><div class="stat-card"><div class="stat-label">Campanhas</div><div class="stat-val">${S.campaigns.length}</div></div><div class="stat-card"><div class="stat-label">Erros</div><div class="stat-val" style="color:${erC?'var(--er-tx)':'var(--ok-tx)'}">${erC}</div></div><div class="stat-card"><div class="stat-label">Pendente Olos</div><div class="stat-val" style="color:${S.pending.length?'var(--wn-tx)':'var(--ok-tx)'}">${S.pending.length}</div></div>`;}
-function rAlerts(){const iss=issues();document.getElementById('ac').innerHTML=iss.slice(0,4).map(i=>`<div class="alert-row al-${i.t}"><i class="ti ti-${i.t==='er'?'alert-circle':'alert-triangle'}"></i><strong>${i.n}</strong>: ${i.m}</div>`).join('')+(iss.length>4?`<p style="font-size:11px;color:var(--text2);margin-bottom:8px">...e mais ${iss.length-4}</p>`:'');}
-function rTable(){const fv=document.getElementById('fi').value.toLowerCase();const fr=document.getElementById('fr').value;const sel=document.getElementById('fr');if(sel.options.length<=1)RL.filter(r=>r!=='NENHUMA').forEach(r=>{const o=document.createElement('option');o.value=r;o.text=r;sel.appendChild(o);});const list=S.campaigns.filter(c=>c.nome.toLowerCase().includes(fv)&&(!fr||c.rota===fr));if(!list.length){document.getElementById('tb').innerHTML=`<tr><td colspan="8" style="text-align:center;padding:1.5rem;color:var(--text2)">Nenhum resultado</td></tr>`;return;}document.getElementById('tb').innerHTML=list.map(c=>{const s=sd(c),sc=s<0?'pill-er':s>0?'pill-wn':'pill-ok',st=s>0?'+'+s:''+s;const opts=RL.map(r=>`<option value="${r}"${c.rota===r?' selected':''}>${r}</option>`).join('');return`<tr><td style="font-weight:500">${c.nome}</td><td style="text-align:center"><input type="checkbox"${c.ativo?' checked':''} onchange="edit(${c.id},'ativo',this.checked)"/></td><td><input class="ei" type="number" value="${c.sol}" min="0" onchange="edit(${c.id},'sol',+this.value)"/></td><td><input class="ei" type="number" value="${c.aloc}" min="0" onchange="edit(${c.id},'aloc',+this.value)"/></td><td><span class="pill ${sc}">${st}</span></td><td><select class="rs" onchange="edit(${c.id},'rota',this.value)">${opts}</select></td><td><input class="ei" type="number" value="${c.max}" min="0" onchange="edit(${c.id},'max',+this.value)" style="width:55px"/></td><td><button onclick="del(${c.id})" style="background:none;border:none;cursor:pointer;color:var(--text2);padding:2px"><i class="ti ti-trash" style="font-size:13px"></i></button></td></tr>`;}).join('');}
-function rRoutes(){const use={};S.campaigns.forEach(c=>{if(c.rota&&c.rota!=='NENHUMA')use[c.rota]=(use[c.rota]||0)+c.aloc;});document.getElementById('rg').innerHTML=RL.filter(r=>r!=='NENHUMA').map(r=>{const cap=RC[r]||0,used=use[r]||0,pct=cap>0?Math.round(used/cap*100):0;const col=pct>90?'var(--er-tx)':pct>70?'var(--wn-tx)':'var(--ok-tx)';return`<div class="rc"><div class="rn">${r}</div><div class="rv" style="color:${col}">${used}<span style="font-size:12px;color:var(--text2)">/${cap}</span></div><div class="rpb"><div class="rpf" style="width:${Math.min(pct,100)}%;background:${col}"></div></div><div style="font-size:10px;color:var(--text3);margin-top:3px">${pct}% utilizado</div></div>`;}).join('');}
-function rChecklist(){const el=document.getElementById('cl');if(!S.pending.length){el.innerHTML=`<div class="empty"><i class="ti ti-circle-check" style="color:var(--ok-tx)"></i>Nenhuma alteração pendente.</div>`;return;}const latest={};S.pending.forEach(ch=>{latest[ch.campanha+'|'+ch.campo]=ch;});const chs=Object.values(latest);const urgent=chs.filter(ch=>{if(ch.campo!=='aloc')return false;const c=S.campaigns.find(x=>x.nome===ch.campanha);return c&&ch.para>c.max;});const reg=chs.filter(ch=>!urgent.includes(ch));let html='';if(urgent.length){html+=`<div style="margin-bottom:10px;padding:8px 11px;background:var(--er-bg);border-radius:var(--r);font-size:12px;color:var(--er-tx)"><i class="ti ti-alert-circle"></i> <strong>Faça primeiro:</strong> atualize Máx. de Canais na Olos.</div>`;urgent.forEach((ch,i)=>{const c=S.campaigns.find(x=>x.nome===ch.campanha);html+=`<div class="sc sc-urgent"><div class="sn" style="background:var(--er-bg);color:var(--er-tx)">${i+1}</div><div><div style="font-weight:600;font-size:12px;margin-bottom:2px">Aumentar Máx. — ${ch.campanha}</div><div style="font-size:11px;color:var(--text2)">Atual: ${c?c.max:'-'} → ${ch.para} <a href="https://ddm.oloschannel.com.br/SysConfiguration/CampaignsForm.aspx" target="_blank">Abrir Olos</a></div></div></div>`;});}reg.forEach((ch,i)=>{const url=ch.campo==='rota'||ch.campo==='max'?'https://ddm.oloschannel.com.br/SysConfiguration/CampaignsForm.aspx':'https://ddm.oloschannel.com.br/SysConfiguration/ChannelControl.aspx';const desc=ch.campo==='rota'?`Rota: ${ch.de} → ${ch.para}`:ch.campo==='aloc'?`Alocado: ${ch.de}→${ch.para}`:`${ch.campo}: ${ch.de}→${ch.para}`;html+=`<div class="sc"><div class="sn">${urgent.length+i+1}</div><div><div style="font-weight:600;font-size:12px">${ch.campanha}</div><div style="font-size:11px;color:var(--text2)">${desc} <a href="${url}" target="_blank">Abrir</a></div></div></div>`;});html+=`<div style="margin-top:12px;display:flex;justify-content:flex-end"><button class="btn" onclick="clearP()" style="color:var(--ok-tx);border-color:var(--ok-tx)"><i class="ti ti-check"></i>Marcar como aplicado</button></div>`;el.innerHTML=html;}
-function rLog(){if(!S.log.length){document.getElementById('lg').innerHTML=`<p style="color:var(--text2);font-size:12px;padding:.75rem 0">Nenhuma alteração.</p>`;return;}document.getElementById('lg').innerHTML=`<div style="display:flex;justify-content:flex-end;margin-bottom:8px"><button class="btn" onclick="clearLog()" style="font-size:11px"><i class="ti ti-trash"></i>Limpar</button></div>`+S.log.map(e=>{const dt=new Date(e.ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});return`<div class="le"><span class="lts">${dt}</span><span style="color:var(--text2)"><strong style="color:var(--text)">${e.campanha}</strong> — ${e.campo}: <span style="text-decoration:line-through;opacity:.5">${e.de}</span> → <strong>${e.para}</strong></span></div>`;}).join('');}
-function edit(id,campo,val){const c=S.campaigns.find(x=>x.id===id);if(!c)return;const old=c[campo];if(old===val)return;c[campo]=val;const e={ts:new Date().toISOString(),campanha:c.nome,campo,de:old,para:val};S.log.unshift(e);if(S.log.length>300)S.log.pop();S.pending.push(e);document.getElementById('tbc').style.color='var(--wn-tx)';lsSave();renderAll();if(tokenValid()){clearTimeout(syncDebounce);syncDebounce=setTimeout(()=>{writeToSheets();appendLogToSheets(e);},1500);}}
-function del(id){if(!confirm('Remover?'))return;S.campaigns=S.campaigns.filter(c=>c.id!==id);lsSave();if(tokenValid())writeToSheets();renderAll();}
-function addCampaign(){const nome=prompt('Nome:');if(!nome||!nome.trim())return;S.campaigns.push({id:nid++,nome:nome.trim(),ativo:true,sol:0,aloc:0,rota:'NENHUMA',max:0});lsSave();if(tokenValid())writeToSheets();renderAll();}
+function sd(c){return (+c.aloc)-(+c.sol);}
+function getRL(){return S.routes.map(r=>r.nome);}
+function issues(){
+  const r=[];
+  S.campaigns.forEach(c=>{
+    const s=sd(c);
+    if(s<0)r.push({t:'er',n:c.nome,m:`saldo ${s} — canais insuficientes`});
+    if(c.ativo&&(!c.rota||c.rota==='NENHUMA'))r.push({t:'wn',n:c.nome,m:'ativa sem rota'});
+    if(c.max>0&&c.aloc>c.max)r.push({t:'er',n:c.nome,m:`alocado (${c.aloc}) > máx. canais (${c.max})`});
+  });
+  return r;
+}
+function createBackup(){
+  const b={ts:new Date().toISOString(),campaigns:JSON.parse(JSON.stringify(S.campaigns)),routes:JSON.parse(JSON.stringify(S.routes))};
+  S.backups.unshift(b);if(S.backups.length>10)S.backups.pop();
+  lsSave();renderBackups();showToast('Backup salvo');
+}
+function restoreBackup(idx){
+  const b=S.backups[idx];if(!b)return;
+  const dt=new Date(b.ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+  if(!confirm(`Restaurar backup de ${dt}?\n\nSobrescreve os dados atuais.`))return;
+  createBackup();
+  S.campaigns=JSON.parse(JSON.stringify(b.campaigns));
+  if(b.routes)S.routes=JSON.parse(JSON.stringify(b.routes));
+  lsSave();if(tokenValid())writeToSheets();renderAll();showToast('Backup restaurado');
+}
+function deleteBackup(idx){
+  if(!confirm('Remover este backup?'))return;
+  S.backups.splice(idx,1);lsSave();renderBackups();
+}
+function addRoute(){
+  const nome=prompt('Nome da nova rota (ex: MYNEWROUTE):');
+  if(!nome||!nome.trim())return;
+  const nomeUp=nome.trim().toUpperCase();
+  if(S.routes.find(r=>r.nome===nomeUp)){alert('Rota já existe.');return;}
+  const capStr=prompt('Capacidade (número de canais, 0 se desconhecido):','0');
+  const cap=parseInt(capStr)||0;
+  S.routes.push({nome:nomeUp,cap});lsSave();renderAll();showToast(`Rota ${nomeUp} adicionada`);
+}
+function deleteRoute(nome){
+  if(nome==='NENHUMA'){alert('Esta rota não pode ser removida.');return;}
+  const inUse=S.campaigns.some(c=>c.rota===nome);
+  if(inUse){alert(`A rota ${nome} está em uso. Altere as campanhas primeiro.`);return;}
+  if(!confirm(`Remover a rota ${nome}?`))return;
+  S.routes=S.routes.filter(r=>r.nome!==nome);lsSave();renderAll();
+}
+function updateRouteCap(nome,val){
+  const r=S.routes.find(x=>x.nome===nome);if(r)r.cap=+val;lsSave();rRoutes();
+}
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';
+  clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2500);
+}
+function toggleAlerts(){
+  alertsOpen=!alertsOpen;
+  document.getElementById('alerts-body').classList.toggle('open',alertsOpen);
+  document.getElementById('alerts-chevron').style.transform=alertsOpen?'rotate(180deg)':'';
+}
+function rStats(){
+  const tot=S.routes.reduce((a,r)=>a+r.cap,0);
+  const aloc=S.campaigns.reduce((s,c)=>s+(+c.aloc),0);
+  const iss=issues(),erC=iss.filter(i=>i.t==='er').length;
+  document.getElementById('sg').innerHTML=`
+    <div class="stat-card"><div class="stat-label">Total canais</div><div class="stat-val">${tot}</div></div>
+    <div class="stat-card"><div class="stat-label">Alocados</div><div class="stat-val">${aloc}</div></div>
+    <div class="stat-card"><div class="stat-label">Livres</div><div class="stat-val" style="color:var(--ok-tx)">${tot-aloc}</div></div>
+    <div class="stat-card"><div class="stat-label">Campanhas</div><div class="stat-val">${S.campaigns.length}</div></div>
+    <div class="stat-card"><div class="stat-label">Erros</div><div class="stat-val" style="color:${erC?'var(--er-tx)':'var(--ok-tx)'}">${erC}</div></div>
+    <div class="stat-card"><div class="stat-label">Pendente Olos</div><div class="stat-val" style="color:${S.pending.length?'var(--wn-tx)':'var(--ok-tx)'}">${S.pending.length}</div></div>`;
+}
+function rAlerts(){
+  const iss=issues();
+  const wrap=document.getElementById('alerts-wrap');
+  if(!iss.length){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  const erC=iss.filter(i=>i.t==='er').length,wnC=iss.filter(i=>i.t==='wn').length;
+  let txt='';
+  if(erC)txt+=`<span class="alert-badge" style="background:var(--er-bg);color:var(--er-tx)">${erC} erro${erC>1?'s':''}</span> `;
+  if(wnC)txt+=`<span class="alert-badge" style="background:var(--wn-bg);color:var(--wn-tx)">${wnC} aviso${wnC>1?'s':''}</span>`;
+  document.getElementById('alerts-count-txt').innerHTML=txt;
+  document.getElementById('alerts-body').innerHTML=iss.map(i=>`
+    <div class="alert-row al-${i.t}">
+      <i class="ti ti-${i.t==='er'?'alert-circle':'alert-triangle'}" style="font-size:13px;flex-shrink:0"></i>
+      <strong>${i.n}</strong>: ${i.m}
+    </div>`).join('');
+}
+function rTable(){
+  const fv=document.getElementById('fi').value.toLowerCase();
+  const fr=document.getElementById('fr').value;
+  const sel=document.getElementById('fr');
+  const rl=getRL();
+  while(sel.options.length>1)sel.remove(1);
+  rl.filter(r=>r!=='NENHUMA').forEach(r=>{const o=document.createElement('option');o.value=r;o.text=r;sel.appendChild(o);});
+  if(fr)sel.value=fr;
+  const list=S.campaigns.filter(c=>c.nome.toLowerCase().includes(fv)&&(!fr||c.rota===fr));
+  if(!list.length){document.getElementById('tb').innerHTML=`<tr><td colspan="8" style="text-align:center;padding:1.5rem;color:var(--text2)">Nenhum resultado</td></tr>`;return;}
+  document.getElementById('tb').innerHTML=list.map(c=>{
+    const s=sd(c),sc=s<0?'pill-er':s>0?'pill-wn':'pill-ok',st=s>0?'+'+s:''+s;
+    const opts=rl.map(r=>`<option value="${r}"${c.rota===r?' selected':''}>${r}</option>`).join('');
+    return`<tr>
+      <td style="font-weight:500">${c.nome}</td>
+      <td style="text-align:center"><input type="checkbox"${c.ativo?' checked':''} onchange="edit(${c.id},'ativo',this.checked)"/></td>
+      <td><input class="ei" type="number" value="${c.sol}" min="0" onchange="edit(${c.id},'sol',+this.value)"/></td>
+      <td><input class="ei" type="number" value="${c.aloc}" min="0" onchange="edit(${c.id},'aloc',+this.value)"/></td>
+      <td><span class="pill ${sc}">${st}</span></td>
+      <td><select class="rs" onchange="edit(${c.id},'rota',this.value)">${opts}</select></td>
+      <td><input class="ei" type="number" value="${c.max}" min="0" onchange="edit(${c.id},'max',+this.value)" style="width:55px"/></td>
+      <td><button onclick="del(${c.id})" style="background:none;border:none;cursor:pointer;color:var(--text2);padding:2px"><i class="ti ti-trash" style="font-size:13px"></i></button></td>
+    </tr>`;
+  }).join('');
+}
+function rRoutes(){
+  const use={};
+  S.campaigns.forEach(c=>{if(c.rota&&c.rota!=='NENHUMA')use[c.rota]=(use[c.rota]||0)+(+c.aloc);});
+  document.getElementById('rg').innerHTML=S.routes.filter(r=>r.nome!=='NENHUMA').map(r=>{
+    const used=use[r.nome]||0,pct=r.cap>0?Math.round(used/r.cap*100):0;
+    const col=pct>90?'var(--er-tx)':pct>70?'var(--wn-tx)':'var(--ok-tx)';
+    return`<div class="rc">
+      <div class="rn">${r.nome}</div>
+      <div class="rv" style="color:${col}">${used}<span style="font-size:12px;color:var(--text2)">/${r.cap||'?'}</span></div>
+      <div class="rpb"><div class="rpf" style="width:${Math.min(pct,100)}%;background:${col}"></div></div>
+      <div style="font-size:10px;color:var(--text3);margin-top:3px">${r.cap>0?pct+'% utilizado':'capacidade não definida'}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('routes-manage').innerHTML=`<table style="width:100%;font-size:12px;border-collapse:collapse">
+    <thead><tr>
+      <th style="text-align:left;padding:6px 8px;font-size:11px;color:var(--text2);border-bottom:.5px solid var(--border)">Rota</th>
+      <th style="text-align:left;padding:6px 8px;font-size:11px;color:var(--text2);border-bottom:.5px solid var(--border)">Capacidade</th>
+      <th style="text-align:left;padding:6px 8px;font-size:11px;color:var(--text2);border-bottom:.5px solid var(--border)">Em uso</th>
+      <th style="width:32px;border-bottom:.5px solid var(--border)"></th>
+    </tr></thead>
+    <tbody>${S.routes.filter(r=>r.nome!=='NENHUMA').map(r=>`<tr>
+      <td style="padding:5px 8px;font-weight:500">${r.nome}</td>
+      <td style="padding:5px 8px"><input class="ei" type="number" value="${r.cap}" min="0" onchange="updateRouteCap('${r.nome}',this.value)" style="width:70px"/></td>
+      <td style="padding:5px 8px;color:var(--text2)">${use[r.nome]||0}</td>
+      <td style="padding:5px 8px"><button onclick="deleteRoute('${r.nome}')" style="background:none;border:none;cursor:pointer;color:var(--text2);padding:2px"><i class="ti ti-trash" style="font-size:13px"></i></button></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+function rChecklist(){
+  const el=document.getElementById('cl');
+  if(!S.pending.length){el.innerHTML=`<div class="empty"><i class="ti ti-circle-check" style="color:var(--ok-tx)"></i>Nenhuma alteração pendente. Olos está em conformidade.</div>`;return;}
+  const latest={};S.pending.forEach(ch=>{latest[ch.campanha+'|'+ch.campo]=ch;});
+  const chs=Object.values(latest);
+  const urgent=chs.filter(ch=>{if(ch.campo!=='aloc')return false;const c=S.campaigns.find(x=>x.nome===ch.campanha);return c&&ch.para>c.max;});
+  const reg=chs.filter(ch=>!urgent.includes(ch));
+  let html='';
+  if(urgent.length){
+    html+=`<div style="margin-bottom:10px;padding:8px 11px;background:var(--er-bg);border-radius:var(--r);font-size:12px;color:var(--er-tx)"><i class="ti ti-alert-circle"></i> <strong>Faça primeiro:</strong> atualize Máx. de Canais na Olos.</div>`;
+    urgent.forEach((ch,i)=>{const c=S.campaigns.find(x=>x.nome===ch.campanha);
+      html+=`<div class="sc sc-urgent"><div class="sn" style="background:var(--er-bg);color:var(--er-tx)">${i+1}</div><div>
+        <div style="font-weight:600;font-size:12px;margin-bottom:2px">Aumentar Máx. de Canais — ${ch.campanha}</div>
+        <div style="font-size:11px;color:var(--text2)">Atual: ${c?c.max:'-'} → ${ch.para} &nbsp;<a href="https://ddm.oloschannel.com.br/SysConfiguration/CampaignsForm.aspx" target="_blank">Abrir Olos</a></div>
+      </div></div>`;
+    });
+  }
+  reg.forEach((ch,i)=>{
+    const url=ch.campo==='rota'||ch.campo==='max'?'https://ddm.oloschannel.com.br/SysConfiguration/CampaignsForm.aspx':'https://ddm.oloschannel.com.br/SysConfiguration/ChannelControl.aspx';
+    const desc=ch.campo==='rota'?`Rota: ${ch.de} → ${ch.para}`:ch.campo==='aloc'?`Alocado: ${ch.de}→${ch.para}`:ch.campo==='sol'?`Solicitado: ${ch.de}→${ch.para}`:`${ch.campo}: ${ch.de}→${ch.para}`;
+    html+=`<div class="sc"><div class="sn">${urgent.length+i+1}</div><div>
+      <div style="font-weight:600;font-size:12px;margin-bottom:2px">${ch.campanha}</div>
+      <div style="font-size:11px;color:var(--text2)">${desc} &nbsp;<a href="${url}" target="_blank">Abrir na Olos</a></div>
+    </div></div>`;
+  });
+  html+=`<div style="margin-top:12px;display:flex;justify-content:flex-end"><button class="btn btn-ok" onclick="clearP()"><i class="ti ti-check"></i>Marcar tudo como aplicado na Olos</button></div>`;
+  el.innerHTML=html;
+}
+function renderBackups(){
+  const el=document.getElementById('backups-list');
+  if(!S.backups.length){el.innerHTML=`<p style="font-size:12px;color:var(--text2);padding:.5rem 0">Nenhum backup. Clique em "Backup" no topo para criar um.</p>`;return;}
+  el.innerHTML=S.backups.map((b,i)=>{
+    const dt=new Date(b.ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit',hour:'2-digit',minute:'2-digit'});
+    return`<div class="bk-row">
+      <div><i class="ti ti-device-floppy" style="font-size:13px;color:var(--text2);margin-right:6px"></i><span style="font-weight:500">${dt}</span> <span style="color:var(--text2);font-size:11px">(${b.campaigns.length} campanhas)</span></div>
+      <div style="display:flex;gap:6px">
+        <button class="btn" onclick="restoreBackup(${i})" style="font-size:11px"><i class="ti ti-history"></i>Restaurar</button>
+        <button class="btn" onclick="deleteBackup(${i})" style="font-size:11px;color:var(--er-tx)"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function rLog(){
+  if(!S.log.length){document.getElementById('lg').innerHTML=`<p style="color:var(--text2);font-size:12px;padding:.75rem 0">Nenhuma alteração.</p>`;return;}
+  document.getElementById('lg').innerHTML=`<div style="display:flex;justify-content:flex-end;margin-bottom:8px"><button class="btn" onclick="clearLog()" style="font-size:11px"><i class="ti ti-trash"></i>Limpar log</button></div>`
+    +S.log.map(e=>{const dt=new Date(e.ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+      return`<div class="le"><span class="lts">${dt}</span><span style="color:var(--text2)"><strong style="color:var(--text)">${e.campanha}</strong> — ${e.campo}: <span style="text-decoration:line-through;opacity:.5">${e.de}</span> → <strong>${e.para}</strong></span></div>`;
+    }).join('');
+}
+function edit(id,campo,val){
+  const c=S.campaigns.find(x=>x.id===id);if(!c)return;
+  const old=c[campo];if(old===val)return;
+  c[campo]=val;
+  const e={ts:new Date().toISOString(),campanha:c.nome,campo,de:old,para:val};
+  S.log.unshift(e);if(S.log.length>500)S.log.pop();
+  S.pending.push(e);
+  document.getElementById('tbc').style.color='var(--wn-tx)';
+  lsSave();renderAll();
+  if(tokenValid()){clearTimeout(syncDebounce);syncDebounce=setTimeout(()=>{writeToSheets();appendLogToSheets(e);},1500);}
+}
+function del(id){if(!confirm('Remover esta campanha?'))return;S.campaigns=S.campaigns.filter(c=>c.id!==id);lsSave();if(tokenValid())writeToSheets();renderAll();}
+function addCampaign(){const nome=prompt('Nome da nova campanha:');if(!nome||!nome.trim())return;S.campaigns.push({id:nid++,nome:nome.trim(),ativo:true,sol:0,aloc:0,rota:'NENHUMA',max:0});lsSave();if(tokenValid())writeToSheets();renderAll();}
 function clearP(){S.pending=[];document.getElementById('tbc').style.color='';lsSave();renderAll();}
-function clearLog(){if(!confirm('Limpar log?'))return;S.log=[];lsSave();renderAll();}
-function resetData(){if(!confirm('Restaurar?'))return;S={campaigns:JSON.parse(JSON.stringify(BD)),log:[],pending:[]};nid=45;lsSave();if(tokenValid())writeToSheets();renderAll();}
-function exportCSV(){const csv=['Campanha,Ativo,Solicitado,Alocado,Saldo,Rota,Máx.Canais',...S.campaigns.map(c=>[c.nome,c.ativo?'Sim':'Não',c.sol,c.aloc,sd(c),c.rota,c.max].join(','))].join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);a.download='canais-rotas-'+new Date().toISOString().slice(0,10)+'.csv';a.click();}
+function clearLog(){if(!confirm('Limpar todo o log?'))return;S.log=[];lsSave();renderAll();}
+function exportCSV(){
+  const csv=['Campanha,Ativo,Solicitado,Alocado,Saldo,Rota,Máx.Canais',...S.campaigns.map(c=>[c.nome,c.ativo?'Sim':'Não',c.sol,c.aloc,sd(c),c.rota,c.max].join(','))].join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);a.download='canais-rotas-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+}
 function showTab(tab,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+tab).classList.add('active');if(tab==='checklist')document.getElementById('tbc').style.color='';}
-function renderAll(){rStats();rAlerts();rTable();rRoutes();rChecklist();rLog();}
+function renderAll(){rStats();rAlerts();rTable();rRoutes();rChecklist();renderBackups();rLog();}
 lsLoad();renderAll();waitForGIS(initGIS);
 </script>
 </body>
