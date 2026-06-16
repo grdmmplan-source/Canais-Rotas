@@ -98,22 +98,18 @@ a{color:var(--in-tx);}
       <button class="btn" onclick="resetData()" title="Restaurar dados originais"><i class="ti ti-refresh"></i>Resetar</button>
     </div>
   </header>
-
   <div class="cfg-banner" id="cfg-banner" style="display:none">
     <i class="ti ti-settings"></i>
-    <span><strong>Configuração necessária:</strong> edite o arquivo <code>index.html</code> e preencha <code>CLIENT_ID</code> e <code>SHEET_ID</code> conforme o guia <code>SETUP.md</code>.</span>
+    <span><strong>Configuração necessária:</strong> edite o arquivo <code>index.html</code> e preencha <code>CLIENT_ID</code> e <code>SHEET_ID</code>.</span>
   </div>
-
   <div class="stat-grid" id="sg"></div>
   <div id="ac"></div>
-
   <div class="tab-bar">
     <button class="tab-btn active" onclick="showTab('campanhas',this)"><i class="ti ti-table"></i>Campanhas</button>
     <button class="tab-btn" onclick="showTab('rotas',this)"><i class="ti ti-route"></i>Rotas</button>
     <button class="tab-btn" id="tbc" onclick="showTab('checklist',this)"><i class="ti ti-list-check"></i>Checklist Olos</button>
     <button class="tab-btn" onclick="showTab('log',this)"><i class="ti ti-history"></i>Log</button>
   </div>
-
   <div class="tab-panel active" id="tab-campanhas">
     <div class="toolbar">
       <div style="display:flex;gap:6px;flex-wrap:wrap">
@@ -122,33 +118,25 @@ a{color:var(--in-tx);}
       </div>
       <button class="btn" onclick="addCampaign()"><i class="ti ti-plus"></i>Nova campanha</button>
     </div>
-    <div class="tw">
-      <table>
-        <thead><tr>
-          <th style="width:195px">Campanha</th>
-          <th style="width:52px;text-align:center">Ativo</th>
-          <th style="width:85px">Solicitado</th>
-          <th style="width:78px">Alocado</th>
-          <th style="width:68px">Saldo</th>
-          <th style="width:145px">Rota</th>
-          <th style="width:82px">Máx.Canais</th>
-          <th style="width:32px"></th>
-        </tr></thead>
-        <tbody id="tb"></tbody>
-      </table>
-    </div>
+    <div class="tw"><table>
+      <thead><tr>
+        <th style="width:195px">Campanha</th><th style="width:52px;text-align:center">Ativo</th>
+        <th style="width:85px">Solicitado</th><th style="width:78px">Alocado</th>
+        <th style="width:68px">Saldo</th><th style="width:145px">Rota</th>
+        <th style="width:82px">Máx.Canais</th><th style="width:32px"></th>
+      </tr></thead>
+      <tbody id="tb"></tbody>
+    </table></div>
   </div>
   <div class="tab-panel" id="tab-rotas"><div class="rg" id="rg"></div></div>
   <div class="tab-panel" id="tab-checklist"><div id="cl"></div></div>
   <div class="tab-panel" id="tab-log"><div id="lg"></div></div>
 </div>
-
 <script>
-const CLIENT_ID = '724008884935-pjuskq1buf63m2brcld11jlpjfok81pr.apps.googleusercontent.com';
-const SHEET_ID  = '1KTte3ETz2cCWNcWaeNS0Asm71Zsc9IOaKBCONi0KETg';
-const SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
-const SHEET_CAMP = 'CAMPANHAS!A2:G300';
-const SHEET_LOG  = 'LOG!A:F';
+const CLIENT_ID='724008884935-pjuskq1buf63m2brcld11jlpjfok81pr.apps.googleusercontent.com';
+const SHEET_ID='1KTte3ETz2cCWNcWaeNS0Asm71Zsc9IOaKBCONi0KETg';
+const SCOPE='https://www.googleapis.com/auth/spreadsheets';
+const SHEET_CAMP='CAMPANHAS!A2:G300';const SHEET_LOG='LOG!A:F';
 const RL=['NENHUMA','VONEX','PONTALTECH','LOGIN_NOT_EXT','R1','OKTOR_ALTA','NEWVOICE_BM','NEWVOICE','SIPWAY','LCR_OLOS','RETELL','VAPI'];
 const RC={VONEX:193,PONTALTECH:184,LOGIN_NOT_EXT:50,R1:42,OKTOR_ALTA:40,NEWVOICE_BM:32,NEWVOICE:20,SIPWAY:18,LCR_OLOS:3,RETELL:3,NENHUMA:0,VAPI:4};
 const BD=[
@@ -203,22 +191,22 @@ const LS_KEY='cr-ddm-v2';
 function lsLoad(){try{const d=JSON.parse(localStorage.getItem(LS_KEY));if(d){if(d.c)S.campaigns=d.c;if(d.l)S.log=d.l;if(d.p)S.pending=d.p;if(d.n)nid=d.n;}}catch(e){}}
 function lsSave(){try{localStorage.setItem(LS_KEY,JSON.stringify({c:S.campaigns,l:S.log,p:S.pending,n:nid}));}catch(e){}}
 function tokenValid(){return accessToken&&Date.now()<tokenExpiry;}
-function storeToken(t,expiresIn){accessToken=t;tokenExpiry=Date.now()+(expiresIn||3600)*1000-60000;localStorage.setItem('goog_tok',JSON.stringify({t,e:tokenExpiry}));}
+function storeToken(t,ei){accessToken=t;tokenExpiry=Date.now()+(ei||3600)*1000-60000;localStorage.setItem('goog_tok',JSON.stringify({t,e:tokenExpiry}));}
 function restoreToken(){try{const d=JSON.parse(localStorage.getItem('goog_tok'));if(d&&d.e>Date.now()){accessToken=d.t;tokenExpiry=d.e;return true;}}catch(e){}return false;}
 function clearToken(){accessToken=null;tokenExpiry=0;localStorage.removeItem('goog_tok');}
 async function sheetsGet(range){const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}`,{headers:{Authorization:'Bearer '+accessToken}});if(!r.ok)throw new Error('GET '+r.status);return r.json();}
 async function sheetsPut(range,values){const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}?valueInputOption=RAW`,{method:'PUT',headers:{Authorization:'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({values})});if(!r.ok)throw new Error('PUT '+r.status);}
 async function sheetsAppend(range,values){const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,{method:'POST',headers:{Authorization:'Bearer '+accessToken,'Content-Type':'application/json'},body:JSON.stringify({values})});if(!r.ok)throw new Error('APPEND '+r.status);}
-async function loadFromSheets(){setSyncStatus('ing','Carregando...');try{const res=await sheetsGet(SHEET_CAMP);const rows=(res.values||[]).filter(r=>r[0]&&r[1]);if(rows.length){S.campaigns=rows.map(r=>({id:+r[0]||nid++,nome:r[1]||'',ativo:r[2]==='Sim'||r[2]==='true',sol:+r[3]||0,aloc:+r[4]||0,rota:r[5]||'NENHUMA',max:+r[6]||0}));nid=Math.max(nid,...S.campaigns.map(c=>c.id+1));}lsSave();renderAll();setSyncStatus('ok','Sincronizado');}catch(e){setSyncStatus('err','Erro ao carregar');console.error(e);}}
+async function loadFromSheets(){setSyncStatus('ing','Carregando...');try{const res=await sheetsGet(SHEET_CAMP);const rows=(res.values||[]).filter(r=>r[0]&&r[1]);if(rows.length){S.campaigns=rows.map(r=>({id:+r[0]||nid++,nome:r[1]||'',ativo:r[2]==='Sim'||r[2]==='true',sol:+r[3]||0,aloc:+r[4]||0,rota:r[5]||'NENHUMA',max:+r[6]||0}));nid=Math.max(nid,...S.campaigns.map(c=>c.id+1));lsSave();renderAll();setSyncStatus('ok','Sincronizado');}else{setSyncStatus('ing','Planilha vazia — enviando dados...');await writeToSheets();}}catch(e){setSyncStatus('err','Erro ao carregar');console.error(e);}}
 async function writeToSheets(){if(!tokenValid())return;setSyncStatus('ing','Salvando...');try{const rows=S.campaigns.map(c=>[c.id,c.nome,c.ativo?'Sim':'Não',c.sol,c.aloc,c.rota,c.max]);while(rows.length<299)rows.push(['','','','','','','']);await sheetsPut(SHEET_CAMP,rows);setSyncStatus('ok','Sincronizado');}catch(e){setSyncStatus('err','Erro ao salvar');console.error(e);}}
-async function appendLogToSheets(entry){if(!tokenValid())return;try{const ts=new Date(entry.ts).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'});await sheetsAppend(SHEET_LOG,[[ts,entry.campanha,entry.campo,entry.de,entry.para,'app']]);}catch(e){console.error(e);}}
-function setSyncStatus(state,txt){const badge=document.getElementById('sync-status');const icon={ok:'ti-cloud-check',ing:'ti-cloud-upload',err:'ti-cloud-x',off:'ti-cloud-off'}[state]||'ti-cloud-off';const cls={ok:'sync-ok',ing:'sync-ing',err:'sync-err',off:'sync-off'}[state]||'sync-off';badge.className='sync-badge '+cls;badge.innerHTML=`<i class="ti ${icon}" style="font-size:13px"></i><span>${txt}</span>`;}
-function waitForGIS(cb,tries=0){if(typeof google!=='undefined'&&google.accounts){cb();return;}if(tries>30){return;}setTimeout(()=>waitForGIS(cb,tries+1),200);}
+async function appendLogToSheets(e){if(!tokenValid())return;try{const ts=new Date(e.ts).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'});await sheetsAppend(SHEET_LOG,[[ts,e.campanha,e.campo,e.de,e.para,'app']]);}catch(e){console.error(e);}}
+function setSyncStatus(state,txt){const b=document.getElementById('sync-status');const icon={ok:'ti-cloud-check',ing:'ti-cloud-upload',err:'ti-cloud-x',off:'ti-cloud-off'}[state]||'ti-cloud-off';const cls={ok:'sync-ok',ing:'sync-ing',err:'sync-err',off:'sync-off'}[state]||'sync-off';b.className='sync-badge '+cls;b.innerHTML=`<i class="ti ${icon}" style="font-size:13px"></i><span>${txt}</span>`;}
+function waitForGIS(cb,t=0){if(typeof google!=='undefined'&&google.accounts){cb();return;}if(t>30)return;setTimeout(()=>waitForGIS(cb,t+1),200);}
 function initGIS(){tokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPE,callback:(resp)=>{if(resp.error){setSyncStatus('err','Erro de autenticação');return;}storeToken(resp.access_token,resp.expires_in);updateAuthUI(true);loadFromSheets();}});gisReady=true;if(restoreToken()){updateAuthUI(true);loadFromSheets();}}
 function conectar(){if(!gisReady){alert('Aguarde...');return;}tokenClient.requestAccessToken({prompt:'consent'});}
 function desconectar(){if(accessToken)google.accounts.oauth2.revoke(accessToken,()=>{});clearToken();updateAuthUI(false);setSyncStatus('off','Não conectado');}
 function manualSync(){loadFromSheets();}
-function updateAuthUI(connected){document.getElementById('btn-connect').style.display=connected?'none':'';document.getElementById('btn-disconnect').style.display=connected?'':'none';document.getElementById('btn-sync').style.display=connected?'':'none';if(!connected)setSyncStatus('off','Não conectado');}
+function updateAuthUI(c){document.getElementById('btn-connect').style.display=c?'none':'';document.getElementById('btn-disconnect').style.display=c?'':'none';document.getElementById('btn-sync').style.display=c?'':'none';if(!c)setSyncStatus('off','Não conectado');}
 function sd(c){return c.aloc-c.sol;}
 function issues(){const r=[];S.campaigns.forEach(c=>{const s=sd(c);if(s<0)r.push({t:'er',n:c.nome,m:`saldo ${s}`});if(c.ativo&&c.rota==='NENHUMA')r.push({t:'wn',n:c.nome,m:'ativa sem rota'});if(c.max>0&&c.aloc>c.max)r.push({t:'er',n:c.nome,m:`alocado(${c.aloc})>máx(${c.max})`});});return r;}
 function rStats(){const tot=Object.values(RC).reduce((a,b)=>a+b,0);const aloc=S.campaigns.reduce((s,c)=>s+c.aloc,0);const iss=issues(),erC=iss.filter(i=>i.t==='er').length;document.getElementById('sg').innerHTML=`<div class="stat-card"><div class="stat-label">Total canais</div><div class="stat-val">${tot}</div></div><div class="stat-card"><div class="stat-label">Alocados</div><div class="stat-val">${aloc}</div></div><div class="stat-card"><div class="stat-label">Livres</div><div class="stat-val" style="color:var(--ok-tx)">${tot-aloc}</div></div><div class="stat-card"><div class="stat-label">Campanhas</div><div class="stat-val">${S.campaigns.length}</div></div><div class="stat-card"><div class="stat-label">Erros</div><div class="stat-val" style="color:${erC?'var(--er-tx)':'var(--ok-tx)'}">${erC}</div></div><div class="stat-card"><div class="stat-label">Pendente Olos</div><div class="stat-val" style="color:${S.pending.length?'var(--wn-tx)':'var(--ok-tx)'}">${S.pending.length}</div></div>`;}
@@ -228,7 +216,7 @@ function rRoutes(){const use={};S.campaigns.forEach(c=>{if(c.rota&&c.rota!=='NEN
 function rChecklist(){const el=document.getElementById('cl');if(!S.pending.length){el.innerHTML=`<div class="empty"><i class="ti ti-circle-check" style="color:var(--ok-tx)"></i>Nenhuma alteração pendente.</div>`;return;}const latest={};S.pending.forEach(ch=>{latest[ch.campanha+'|'+ch.campo]=ch;});const chs=Object.values(latest);const urgent=chs.filter(ch=>{if(ch.campo!=='aloc')return false;const c=S.campaigns.find(x=>x.nome===ch.campanha);return c&&ch.para>c.max;});const reg=chs.filter(ch=>!urgent.includes(ch));let html='';if(urgent.length){html+=`<div style="margin-bottom:10px;padding:8px 11px;background:var(--er-bg);border-radius:var(--r);font-size:12px;color:var(--er-tx)"><i class="ti ti-alert-circle"></i> <strong>Faça primeiro:</strong> atualize Máx. de Canais na Olos.</div>`;urgent.forEach((ch,i)=>{const c=S.campaigns.find(x=>x.nome===ch.campanha);html+=`<div class="sc sc-urgent"><div class="sn" style="background:var(--er-bg);color:var(--er-tx)">${i+1}</div><div><div style="font-weight:600;font-size:12px;margin-bottom:2px">Aumentar Máx. — ${ch.campanha}</div><div style="font-size:11px;color:var(--text2)">Atual: ${c?c.max:'-'} → ${ch.para} <a href="https://ddm.oloschannel.com.br/SysConfiguration/CampaignsForm.aspx" target="_blank">Abrir Olos</a></div></div></div>`;});}reg.forEach((ch,i)=>{const url=ch.campo==='rota'||ch.campo==='max'?'https://ddm.oloschannel.com.br/SysConfiguration/CampaignsForm.aspx':'https://ddm.oloschannel.com.br/SysConfiguration/ChannelControl.aspx';const desc=ch.campo==='rota'?`Rota: ${ch.de} → ${ch.para}`:ch.campo==='aloc'?`Alocado: ${ch.de}→${ch.para}`:`${ch.campo}: ${ch.de}→${ch.para}`;html+=`<div class="sc"><div class="sn">${urgent.length+i+1}</div><div><div style="font-weight:600;font-size:12px">${ch.campanha}</div><div style="font-size:11px;color:var(--text2)">${desc} <a href="${url}" target="_blank">Abrir</a></div></div></div>`;});html+=`<div style="margin-top:12px;display:flex;justify-content:flex-end"><button class="btn" onclick="clearP()" style="color:var(--ok-tx);border-color:var(--ok-tx)"><i class="ti ti-check"></i>Marcar como aplicado</button></div>`;el.innerHTML=html;}
 function rLog(){if(!S.log.length){document.getElementById('lg').innerHTML=`<p style="color:var(--text2);font-size:12px;padding:.75rem 0">Nenhuma alteração.</p>`;return;}document.getElementById('lg').innerHTML=`<div style="display:flex;justify-content:flex-end;margin-bottom:8px"><button class="btn" onclick="clearLog()" style="font-size:11px"><i class="ti ti-trash"></i>Limpar</button></div>`+S.log.map(e=>{const dt=new Date(e.ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});return`<div class="le"><span class="lts">${dt}</span><span style="color:var(--text2)"><strong style="color:var(--text)">${e.campanha}</strong> — ${e.campo}: <span style="text-decoration:line-through;opacity:.5">${e.de}</span> → <strong>${e.para}</strong></span></div>`;}).join('');}
 function edit(id,campo,val){const c=S.campaigns.find(x=>x.id===id);if(!c)return;const old=c[campo];if(old===val)return;c[campo]=val;const e={ts:new Date().toISOString(),campanha:c.nome,campo,de:old,para:val};S.log.unshift(e);if(S.log.length>300)S.log.pop();S.pending.push(e);document.getElementById('tbc').style.color='var(--wn-tx)';lsSave();renderAll();if(tokenValid()){clearTimeout(syncDebounce);syncDebounce=setTimeout(()=>{writeToSheets();appendLogToSheets(e);},1500);}}
-function del(id){if(!confirm('Remover campanha?'))return;S.campaigns=S.campaigns.filter(c=>c.id!==id);lsSave();if(tokenValid())writeToSheets();renderAll();}
+function del(id){if(!confirm('Remover?'))return;S.campaigns=S.campaigns.filter(c=>c.id!==id);lsSave();if(tokenValid())writeToSheets();renderAll();}
 function addCampaign(){const nome=prompt('Nome:');if(!nome||!nome.trim())return;S.campaigns.push({id:nid++,nome:nome.trim(),ativo:true,sol:0,aloc:0,rota:'NENHUMA',max:0});lsSave();if(tokenValid())writeToSheets();renderAll();}
 function clearP(){S.pending=[];document.getElementById('tbc').style.color='';lsSave();renderAll();}
 function clearLog(){if(!confirm('Limpar log?'))return;S.log=[];lsSave();renderAll();}
@@ -236,8 +224,7 @@ function resetData(){if(!confirm('Restaurar?'))return;S={campaigns:JSON.parse(JS
 function exportCSV(){const csv=['Campanha,Ativo,Solicitado,Alocado,Saldo,Rota,Máx.Canais',...S.campaigns.map(c=>[c.nome,c.ativo?'Sim':'Não',c.sol,c.aloc,sd(c),c.rota,c.max].join(','))].join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent('\uFEFF'+csv);a.download='canais-rotas-'+new Date().toISOString().slice(0,10)+'.csv';a.click();}
 function showTab(tab,btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById('tab-'+tab).classList.add('active');if(tab==='checklist')document.getElementById('tbc').style.color='';}
 function renderAll(){rStats();rAlerts();rTable();rRoutes();rChecklist();rLog();}
-lsLoad();renderAll();
-waitForGIS(initGIS);
+lsLoad();renderAll();waitForGIS(initGIS);
 </script>
 </body>
 </html>
