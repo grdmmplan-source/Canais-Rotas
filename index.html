@@ -103,7 +103,8 @@ a{color:var(--in-tx);}
     <h1><i class="ti ti-phone-call" style="font-size:20px"></i>Canais &amp; Rotas <small>DDM — Olos</small></h1>
     <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
       <span class="sync-badge sync-off" id="sync-status"><i class="ti ti-cloud-off" style="font-size:13px"></i><span id="sync-txt">Não conectado</span></span>
-      <button class="btn" id="btn-sync" onclick="manualSync()" style="display:none"><i class="ti ti-refresh"></i>Sincronizar</button>
+      <button class="btn" id="btn-sync" onclick="manualSync()" style="display:none"><i class="ti ti-cloud-upload"></i>Enviar para planilha</button>
+      <button class="btn" id="btn-pull" onclick="pullFromSheets()" style="display:none"><i class="ti ti-cloud-download"></i>Carregar planilha</button>
       <button class="btn btn-connect" id="btn-connect" onclick="conectar()"><i class="ti ti-brand-google"></i>Conectar Sheets</button>
       <button class="btn" id="btn-disconnect" onclick="desconectar()" style="display:none"><i class="ti ti-logout"></i>Sair</button>
       <button class="btn" onclick="createBackup()"><i class="ti ti-device-floppy"></i>Backup</button>
@@ -233,8 +234,9 @@ function waitForGIS(cb,t=0){if(typeof google!=='undefined'&&google.accounts){cb(
 function initGIS(){tokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:SCOPE,callback:(resp)=>{if(resp.error){setSyncStatus('err','Erro de autenticação');return;}storeToken(resp.access_token,resp.expires_in);updateAuthUI(true);loadFromSheets();}});gisReady=true;if(restoreToken()){updateAuthUI(true);loadFromSheets();}}
 function conectar(){if(!gisReady){alert('Aguarde...');return;}tokenClient.requestAccessToken({prompt:'consent'});}
 function desconectar(){if(accessToken)google.accounts.oauth2.revoke(accessToken,()=>{});clearToken();updateAuthUI(false);setSyncStatus('off','Não conectado');}
-function manualSync(){loadFromSheets();}
-function updateAuthUI(c){document.getElementById('btn-connect').style.display=c?'none':'';document.getElementById('btn-disconnect').style.display=c?'':'none';document.getElementById('btn-sync').style.display=c?'':'none';if(!c)setSyncStatus('off','Não conectado');}
+function manualSync(){writeToSheets();showToast("Enviando para planilha...");}
+function pullFromSheets(){if(confirm("Carregar dados da planilha? Sobrescreve os dados locais."))loadFromSheets();}
+function updateAuthUI(c){document.getElementById('btn-connect').style.display=c?'none':'';document.getElementById('btn-disconnect').style.display=c?'':'none';document.getElementById('btn-sync').style.display=c?'':'none';document.getElementById('btn-pull').style.display=c?'':'none';if(!c)setSyncStatus('off','Não conectado');}
 function sd(c){return (+c.sol)-(+c.aloc);}
 function getRL(){return S.routes.map(r=>r.nome);}
 function issues(){const r=[];S.campaigns.forEach(c=>{const s=sd(c);if(s>0)r.push({t:'er',n:c.nome,m:`saldo +${s} — canais insuficientes`});if(c.ativo&&(!c.rota||c.rota==='NENHUMA'))r.push({t:'wn',n:c.nome,m:'ativa sem rota'});if(c.max>0&&c.aloc>c.max)r.push({t:'er',n:c.nome,m:`alocado (${c.aloc}) > máx. canais (${c.max})`});});return r;}
