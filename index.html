@@ -215,7 +215,7 @@ const BD=[
 ];
 let S={campaigns:JSON.parse(JSON.stringify(BD)),routes:JSON.parse(JSON.stringify(DEFAULT_ROUTES)),log:[],pending:[],backups:[],olosTotal:604};
 let nid=45,accessToken=null,tokenExpiry=0,syncDebounce=null,tokenClient=null,gisReady=false,alertsOpen=false;
-const LS_KEY='cr-ddm-v4';
+const LS_KEY='cr-ddm-v5';
 function lsLoad(){try{const d=JSON.parse(localStorage.getItem(LS_KEY));if(d){if(d.c)S.campaigns=d.c;if(d.r)S.routes=d.r;if(d.l)S.log=d.l;if(d.p)S.pending=d.p;if(d.b)S.backups=d.b;if(d.n)nid=d.n;if(d.ot)S.olosTotal=d.ot;}else{localStorage.setItem(LS_KEY+'_fresh','1');}}catch(e){localStorage.setItem(LS_KEY+'_fresh','1');}}
 function lsSave(){try{localStorage.setItem(LS_KEY,JSON.stringify({c:S.campaigns,r:S.routes,l:S.log,p:S.pending,b:S.backups,n:nid,ot:S.olosTotal}));}catch(e){}}
 function tokenValid(){return accessToken&&Date.now()<tokenExpiry;}
