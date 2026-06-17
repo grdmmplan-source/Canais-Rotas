@@ -202,9 +202,11 @@ const BD=[
   {id:31,nome:'Manual',ativo:true,sol:1,aloc:1,rota:'NEWVOICE_BM',max:1},
   {id:32,nome:'Salta Educação',ativo:true,sol:26,aloc:26,rota:'VONEX',max:26},
   {id:33,nome:'Todos Agentes (Nao Tirar)',ativo:true,sol:1,aloc:0,rota:'PONTALTECH',max:1},
-  {id:34,nome:'Vero_Churn',ativo:true,sol:30,aloc:30,rota:'VONEX',max:30},
+  {id:34,nome:'Vero_Churn',ativo:true,sol:15,aloc:15,rota:'VONEX',max:15},
   {id:35,nome:'Vero_Manual',ativo:true,sol:0,aloc:0,rota:'NEWVOICE_BM',max:0},
-  {id:36,nome:'Vero_PreChurn',ativo:true,sol:30,aloc:30,rota:'VONEX',max:30},
+  {id:36,nome:'Vero_PreChurn',ativo:true,sol:15,aloc:15,rota:'VONEX',max:15},
+  {id:45,nome:'Vero2',ativo:true,sol:28,aloc:28,rota:'VONEX',max:28},
+  {id:46,nome:'Vero2_Manual',ativo:true,sol:2,aloc:2,rota:'VONEX',max:2},
   {id:37,nome:'Way_Ura_Anima',ativo:true,sol:20,aloc:20,rota:'PONTALTECH',max:20},
   {id:38,nome:'Way_Ura_Cruzeiro',ativo:true,sol:67,aloc:67,rota:'VONEX',max:67},
   {id:39,nome:'Way_Ura_Yduqs',ativo:true,sol:28,aloc:28,rota:'VONEX',max:28},
@@ -215,7 +217,7 @@ const BD=[
   {id:44,nome:'SIP',ativo:false,sol:18,aloc:18,rota:'SIPWAY',max:18}
 ];
 let S={campaigns:JSON.parse(JSON.stringify(BD)),routes:JSON.parse(JSON.stringify(DEFAULT_ROUTES)),log:[],pending:[],backups:[],olosTotal:604};
-let nid=45,accessToken=null,tokenExpiry=0,syncDebounce=null,tokenClient=null,gisReady=false,alertsOpen=false;
+let nid=47,accessToken=null,tokenExpiry=0,syncDebounce=null,tokenClient=null,gisReady=false,alertsOpen=false;
 const LS_KEY='cr-ddm-v5';
 function lsLoad(){try{const d=JSON.parse(localStorage.getItem(LS_KEY));if(d){if(d.c)S.campaigns=d.c;if(d.r)S.routes=d.r;if(d.l)S.log=d.l;if(d.p)S.pending=d.p;if(d.b)S.backups=d.b;if(d.n)nid=d.n;if(d.ot)S.olosTotal=d.ot;}else{localStorage.setItem(LS_KEY+'_fresh','1');}}catch(e){localStorage.setItem(LS_KEY+'_fresh','1');}}
 function lsSave(){try{localStorage.setItem(LS_KEY,JSON.stringify({c:S.campaigns,r:S.routes,l:S.log,p:S.pending,b:S.backups,n:nid,ot:S.olosTotal}));}catch(e){}}
