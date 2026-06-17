@@ -235,9 +235,9 @@ function conectar(){if(!gisReady){alert('Aguarde...');return;}tokenClient.reques
 function desconectar(){if(accessToken)google.accounts.oauth2.revoke(accessToken,()=>{});clearToken();updateAuthUI(false);setSyncStatus('off','Não conectado');}
 function manualSync(){loadFromSheets();}
 function updateAuthUI(c){document.getElementById('btn-connect').style.display=c?'none':'';document.getElementById('btn-disconnect').style.display=c?'':'none';document.getElementById('btn-sync').style.display=c?'':'none';if(!c)setSyncStatus('off','Não conectado');}
-function sd(c){return (+c.aloc)-(+c.sol);}
+function sd(c){return (+c.sol)-(+c.aloc);}
 function getRL(){return S.routes.map(r=>r.nome);}
-function issues(){const r=[];S.campaigns.forEach(c=>{const s=sd(c);if(s<0)r.push({t:'er',n:c.nome,m:`saldo ${s} — canais insuficientes`});if(c.ativo&&(!c.rota||c.rota==='NENHUMA'))r.push({t:'wn',n:c.nome,m:'ativa sem rota'});if(c.max>0&&c.aloc>c.max)r.push({t:'er',n:c.nome,m:`alocado (${c.aloc}) > máx. canais (${c.max})`});});return r;}
+function issues(){const r=[];S.campaigns.forEach(c=>{const s=sd(c);if(s>0)r.push({t:'er',n:c.nome,m:`saldo +${s} — canais insuficientes`});if(c.ativo&&(!c.rota||c.rota==='NENHUMA'))r.push({t:'wn',n:c.nome,m:'ativa sem rota'});if(c.max>0&&c.aloc>c.max)r.push({t:'er',n:c.nome,m:`alocado (${c.aloc}) > máx. canais (${c.max})`});});return r;}
 function createBackup(){const b={ts:new Date().toISOString(),campaigns:JSON.parse(JSON.stringify(S.campaigns)),routes:JSON.parse(JSON.stringify(S.routes))};S.backups.unshift(b);if(S.backups.length>10)S.backups.pop();lsSave();renderBackups();showToast('Backup salvo');}
 function restoreBackup(idx){const b=S.backups[idx];if(!b)return;const dt=new Date(b.ts).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});if(!confirm(`Restaurar backup de ${dt}?\n\nSobrescreve os dados atuais.`))return;createBackup();S.campaigns=JSON.parse(JSON.stringify(b.campaigns));if(b.routes)S.routes=JSON.parse(JSON.stringify(b.routes));lsSave();if(tokenValid())writeToSheets();renderAll();showToast('Backup restaurado');}
 function deleteBackup(idx){if(!confirm('Remover este backup?'))return;S.backups.splice(idx,1);lsSave();renderBackups();}
