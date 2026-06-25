@@ -163,10 +163,10 @@ const SHEET_ID='1KTte3ETz2cCWNcWaeNS0Asm71Zsc9IOaKBCONi0KETg';
 const SCOPE='https://www.googleapis.com/auth/spreadsheets';
 const SHEET_CAMP='CAMPANHAS!A2:G300';const SHEET_LOG='LOG!A:F';
 const DEFAULT_ROUTES=[
-  {nome:'NENHUMA',cap:0},{nome:'PONTALTECH',cap:79},{nome:'VONEX',cap:219},
-  {nome:'NEWVOICE',cap:62},{nome:'NEWVOICE_BM',cap:164},{nome:'R1',cap:0},
+  {nome:'NENHUMA',cap:0},{nome:'PONTALTECH',cap:171},{nome:'VONEX',cap:166},
+  {nome:'NEWVOICE',cap:42},{nome:'NEWVOICE_BM',cap:91},{nome:'R1',cap:68},
   {nome:'OKTOR_ALTA',cap:0},{nome:'GOSAT',cap:0},{nome:'VAPI',cap:0},
-  {nome:'RETELL',cap:3},{nome:'LOGIN_NOT_EXT',cap:50},{nome:'SIPWAY',cap:18},{nome:'LCR_OLOS',cap:3}
+  {nome:'RETELL',cap:3},{nome:'LOGIN_NOT_EXT',cap:50},{nome:'SIPWAY',cap:18},{nome:'OKTOR',cap:35},{nome:'4NET',cap:20},{nome:'LCR_OLOS',cap:3}
 ];
 const BD=[
   {id:1,nome:'AD_Preventivo',ativo:true,sol:0,aloc:0,rota:'NENHUMA',max:0},
@@ -174,13 +174,13 @@ const BD=[
   {id:3,nome:'AD_VAPI',ativo:true,sol:5,aloc:1,rota:'PONTALTECH',max:5},
   {id:4,nome:'ADA_Template_Cobranca',ativo:true,sol:0,aloc:1,rota:'LCR_OLOS',max:1},
   {id:5,nome:'ADA_Template_Vendas',ativo:true,sol:0,aloc:1,rota:'LCR_OLOS',max:1},
-  {id:6,nome:'Anima_Ativo',ativo:true,sol:48,aloc:48,rota:'NEWVOICE_BM',max:48},
+  {id:6,nome:'Anima_Ativo',ativo:true,sol:48,aloc:48,rota:'R1',max:48},
   {id:7,nome:'Anima_Manual',ativo:true,sol:5,aloc:5,rota:'PONTALTECH',max:5},
   {id:8,nome:'Ativo_olos',ativo:true,sol:4,aloc:0,rota:'PONTALTECH',max:4},
   {id:9,nome:'Campanha_WAY',ativo:true,sol:2,aloc:0,rota:'VONEX',max:2},
-  {id:10,nome:'Cedae',ativo:true,sol:10,aloc:10,rota:'NEWVOICE',max:10},
-  {id:11,nome:'Cedae Manual',ativo:true,sol:2,aloc:0,rota:'NEWVOICE',max:2},
-  {id:12,nome:'Cruzeiro_Ativo',ativo:true,sol:65,aloc:65,rota:'NEWVOICE_BM',max:65},
+  {id:10,nome:'Cedae',ativo:true,sol:10,aloc:10,rota:'R1',max:10},
+  {id:11,nome:'Cedae Manual',ativo:true,sol:2,aloc:0,rota:'R1',max:2},
+  {id:12,nome:'Cruzeiro_Ativo',ativo:true,sol:65,aloc:65,rota:'PONTALTECH',max:65},
   {id:13,nome:'Cruzeiro_Nao_Alo',ativo:true,sol:10,aloc:10,rota:'NEWVOICE',max:10},
   {id:14,nome:'Cruzeiro_Manual',ativo:true,sol:5,aloc:5,rota:'PONTALTECH',max:5},
   {id:15,nome:'Datora',ativo:true,sol:5,aloc:5,rota:'NEWVOICE_BM',max:5},
@@ -188,28 +188,34 @@ const BD=[
   {id:17,nome:'Educacional Manual',ativo:true,sol:5,aloc:5,rota:'NEWVOICE',max:5},
   {id:18,nome:'Educacional Q1',ativo:true,sol:15,aloc:15,rota:'NEWVOICE_BM',max:15},
   {id:19,nome:'Educacional Q2',ativo:true,sol:10,aloc:10,rota:'NEWVOICE',max:10},
-  {id:20,nome:'Educacional Q3',ativo:true,sol:8,aloc:8,rota:'NEWVOICE_BM',max:8},
+  {id:20,nome:'Educacional Q3',ativo:true,sol:8,aloc:8,rota:'VONEX',max:8},
   {id:21,nome:'Empresarial_Ativo',ativo:true,sol:10,aloc:10,rota:'NEWVOICE',max:10},
   {id:22,nome:'Empresarial_Manual',ativo:true,sol:2,aloc:2,rota:'NEWVOICE',max:2},
   {id:23,nome:'Isaac Ativo Inativo',ativo:true,sol:20,aloc:20,rota:'NEWVOICE_BM',max:20},
   {id:24,nome:'Isaac Ativo Inativo Manual',ativo:true,sol:2,aloc:2,rota:'NEWVOICE',max:2},
   {id:25,nome:'Isaac Inativo Manual',ativo:true,sol:3,aloc:3,rota:'NEWVOICE',max:3},
-  {id:26,nome:'Isaac_Ativo',ativo:true,sol:28,aloc:28,rota:'PONTALTECH',max:28},
-  {id:27,nome:'Isaac_Inativo',ativo:true,sol:20,aloc:20,rota:'PONTALTECH',max:20},
-  {id:28,nome:'Light',ativo:true,sol:10,aloc:10,rota:'NEWVOICE',max:10},
+  {id:26,nome:'Isaac_Ativo',ativo:true,sol:28,aloc:28,rota:'NEWVOICE_BM',max:28},
+  {id:27,nome:'Isaac_Inativo',ativo:true,sol:20,aloc:20,rota:'NEWVOICE_BM',max:20},
+  {id:28,nome:'Light',ativo:true,sol:10,aloc:10,rota:'R1',max:10},
   {id:29,nome:'Locator_CPF_Template',ativo:true,sol:0,aloc:0,rota:'LCR_OLOS',max:0},
   {id:30,nome:'Locator_Template',ativo:true,sol:0,aloc:1,rota:'LCR_OLOS',max:1},
   {id:31,nome:'Manual',ativo:true,sol:1,aloc:1,rota:'NEWVOICE_BM',max:1},
   {id:32,nome:'Salta Educação',ativo:true,sol:26,aloc:26,rota:'VONEX',max:26},
   {id:33,nome:'Todos Agentes (Nao Tirar)',ativo:true,sol:1,aloc:0,rota:'PONTALTECH',max:1},
-  {id:34,nome:'Vero_Churn',ativo:true,sol:15,aloc:15,rota:'VONEX',max:15},
+  {id:34,nome:'Vero_Churn',ativo:true,sol:35,aloc:35,rota:'VONEX',max:35},
   {id:35,nome:'Vero_Manual',ativo:true,sol:0,aloc:0,rota:'NEWVOICE_BM',max:0},
-  {id:36,nome:'Vero_PreChurn',ativo:true,sol:15,aloc:15,rota:'VONEX',max:15},
-  {id:45,nome:'Vero2',ativo:true,sol:28,aloc:28,rota:'VONEX',max:28},
+  {id:36,nome:'Vero_PreChurn',ativo:true,sol:35,aloc:35,rota:'OKTOR',max:35},
+  {id:45,nome:'Vero2',ativo:true,sol:0,aloc:0,rota:'PONTALTECH',max:0},
+  {id:47,nome:'Vero2_20_a_44d_MGSUL',ativo:true,sol:12,aloc:12,rota:'VONEX',max:12},
+  {id:48,nome:'Vero2_20_a_44d_SPCO',ativo:true,sol:9,aloc:9,rota:'VONEX',max:9},
+  {id:49,nome:'Vero2_45_a_75d_MGSUL',ativo:true,sol:9,aloc:9,rota:'VONEX',max:9},
+  {id:50,nome:'Vero2_45_a_75d_SPCO',ativo:true,sol:9,aloc:9,rota:'VONEX',max:9},
+  {id:51,nome:'Vero2_76_a_120d_MGSUL',ativo:true,sol:9,aloc:9,rota:'VONEX',max:9},
+  {id:52,nome:'Vero2_76_a_120d_SPCO',ativo:true,sol:9,aloc:9,rota:'VONEX',max:9},
   {id:46,nome:'Vero2_Manual',ativo:true,sol:2,aloc:2,rota:'VONEX',max:2},
-  {id:37,nome:'Way_Ura_Anima',ativo:true,sol:20,aloc:20,rota:'PONTALTECH',max:20},
-  {id:38,nome:'Way_Ura_Cruzeiro',ativo:true,sol:67,aloc:67,rota:'VONEX',max:67},
-  {id:39,nome:'Way_Ura_Yduqs',ativo:true,sol:28,aloc:28,rota:'VONEX',max:28},
+  {id:37,nome:'Way_Ura_Anima',ativo:true,sol:20,aloc:20,rota:'4NET',max:20},
+  {id:38,nome:'Way_Ura_Cruzeiro',ativo:true,sol:67,aloc:67,rota:'PONTALTECH',max:67},
+  {id:39,nome:'Way_Ura_Yduqs',ativo:true,sol:28,aloc:28,rota:'PONTALTECH',max:28},
   {id:40,nome:'Yduqs_Ativo',ativo:true,sol:25,aloc:25,rota:'VONEX',max:25},
   {id:41,nome:'Yduqs_Manual',ativo:true,sol:3,aloc:3,rota:'VONEX',max:3},
   {id:42,nome:'LICENÇAS',ativo:true,sol:50,aloc:50,rota:'LOGIN_NOT_EXT',max:50},
@@ -217,7 +223,7 @@ const BD=[
   {id:44,nome:'SIP',ativo:false,sol:18,aloc:18,rota:'SIPWAY',max:18}
 ];
 let S={campaigns:JSON.parse(JSON.stringify(BD)),routes:JSON.parse(JSON.stringify(DEFAULT_ROUTES)),log:[],pending:[],backups:[],olosTotal:604};
-let nid=47,accessToken=null,tokenExpiry=0,syncDebounce=null,tokenClient=null,gisReady=false,alertsOpen=false;
+let nid=53,accessToken=null,tokenExpiry=0,syncDebounce=null,tokenClient=null,gisReady=false,alertsOpen=false;
 const LS_KEY='cr-ddm-v5';
 function lsLoad(){try{const d=JSON.parse(localStorage.getItem(LS_KEY));if(d){if(d.c)S.campaigns=d.c;if(d.r)S.routes=d.r;if(d.l)S.log=d.l;if(d.p)S.pending=d.p;if(d.b)S.backups=d.b;if(d.n)nid=d.n;if(d.ot)S.olosTotal=d.ot;}else{localStorage.setItem(LS_KEY+'_fresh','1');}}catch(e){localStorage.setItem(LS_KEY+'_fresh','1');}}
 function lsSave(){try{localStorage.setItem(LS_KEY,JSON.stringify({c:S.campaigns,r:S.routes,l:S.log,p:S.pending,b:S.backups,n:nid,ot:S.olosTotal}));}catch(e){}}
