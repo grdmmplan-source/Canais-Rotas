@@ -1,0 +1,46 @@
+name: Aplicar Mudancas no Olos
+
+on:
+  workflow_dispatch:
+    inputs:
+      changes:
+        description: 'JSON com as mudancas pendentes (array de objetos)'
+        required: true
+        type: string
+
+jobs:
+  apply-olos-changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependencias
+        run: npm install playwright
+
+      - name: Instalar navegador Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Executar automacao
+        env:
+          OLOS_USER: ${{ secrets.OLOS_USER }}
+          OLOS_PASS: ${{ secrets.OLOS_PASS }}
+          CHANGES_JSON: ${{ inputs.changes }}
+        run: node olos-automation.js
+
+      - name: Upload de logs (se falhar)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: error-logs
+          path: |
+            *.png
+            *.log
+          if-no-files-found: ignore
