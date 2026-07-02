@@ -16,7 +16,7 @@ async function login(page) {
     page.waitForNavigation({ waitUntil: 'networkidle' }),
     page.click('input[type="submit"]'),
   ]);
-  console.log('Login realizado. URL:', page.url());
+  console.log('Login OK. URL:', page.url());
 }
 
 async function main() {
@@ -25,67 +25,68 @@ async function main() {
   try {
     await login(page);
 
-    // Tenta navegar diretamente para RoutesList
-    await page.goto(OLOS_URL + '/SysConfiguration/ChannelControl.aspx', { waitUntil: 'networkidle' });
-    console.log('URL ChannelControl:', page.url(), '| Titulo:', await page.title());
+    // Entra no SysConfig via menu para estabelecer contexto de sessao
+    const cfgLink = page.locator('a').filter({ hasText: /Configura/ }).first();
+    await cfgLink.click();
+    await page.waitForNavigation({ waitUntil: 'networkidle' });
+    console.log('SysConfig URL:', page.url());
     await page.screenshot({ path: 'debug-1.png', fullPage: true });
 
-    // Loga todos links com Route no href
-    const allLinks = await page.evaluate(() =>
-      Array.from(document.querySelectorAll('a'))
-        .map(a => ({ text: a.textContent.trim().slice(0, 60), href: a.getAttribute('href') }))
-        .filter(l => l.href && l.href.includes('Route'))
-    );
-    console.log('Links Route:', JSON.stringify(allLinks));
+    // Clica Infraestrutura se existir no menu
+    const infra = page.locator('a').filter({ hasText: 'Infraestrutura' });
+    if (await infra.count() > 0) { await infra.first().click(); await page.waitForTimeout(400); }
 
-    // Tenta URL direta de RoutesList
-    await page.goto(OLOS_URL + '/SysConfiguration/RoutesList.aspx', { waitUntil: 'networkidle' });
-    console.log('URL RoutesList:', page.url(), '| Titulo:', await page.title());
+    // Acha link Listar que aponte para Routes
+    const href = await page.evaluate(() => {
+      const a = Array.from(document.querySelectorAll('a'))
+        .find(el => el.textContent.trim() === 'Listar' && (el.href||'').includes('Route'));
+      return a ? a.href : null;
+    });
+    console.log('Routes Listar href:', href);
+    if (!href) throw new Error('Link Listar de Rotas nao encontrado');
+
+    await page.goto(href, { waitUntil: 'networkidle' });
+    console.log('RoutesList URL:', page.url(), 'Titulo:', await page.title());
     await page.screenshot({ path: 'debug-2.png', fullPage: true });
 
-    const selectInfo = await page.evaluate((target) => {
-      const sel = document.querySelector('select');
-      if (!sel) return { found: false };
-      const opts = Array.from(sel.options).map(o => o.text);
-      return { found: true, count: opts.length, sample: opts.slice(0, 8), hasTarget: opts.some(t => t.includes(target)) };
+    const selInfo = await page.evaluate((t) => {
+      const s = document.querySelector('select');
+      if (!s) return { found: false };
+      const opts = Array.from(s.options).map(o => o.text);
+      return { found: true, count: opts.length, sample: opts.slice(0,6), hasTarget: opts.some(x=>x.includes(t)) };
     }, TARGET_ROUTE_NAME);
-    console.log('Select rotas:', JSON.stringify(selectInfo));
+    console.log('Select:', JSON.stringify(selInfo));
+    if (!selInfo.found || !selInfo.hasTarget) throw new Error('Rota alvo nao encontrada no select');
 
-    if (!selectInfo.found || !selectInfo.hasTarget) {
-      throw new Error('Nao encontrou rota alvo no select. Veja debug-2.png');
-    }
-
-    // Seleciona TARGET e clica Editar
-    const sel = page.locator('select').first();
-    await sel.selectOption({ label: new RegExp(TARGET_ROUTE_NAME) });
+    await page.locator('select').first().selectOption({ label: new RegExp(TARGET_ROUTE_NAME) });
     await page.click('input[value="Editar"], button:has-text("Editar")');
     await page.waitForNavigation({ waitUntil: 'networkidle' });
-    console.log('URL RoutesForm:', page.url());
+    console.log('RoutesForm URL:', page.url());
     await page.screenshot({ path: 'debug-3.png', fullPage: true });
 
-    // Aba Canais -> Configurar Canais
     await page.click('text=Canais');
     await page.waitForTimeout(500);
     await page.click('text=Configurar Canais');
     await page.waitForLoadState('networkidle');
-    console.log('URL RoutesFormChannel:', page.url());
+    await page.waitForTimeout(1000);
+    console.log('RoutesFormChannel URL:', page.url());
     await page.screenshot({ path: 'debug-4.png', fullPage: true });
 
-    // Le estado AngularJS (somente leitura)
     const state = await page.evaluate((src) => {
       const li = document.querySelector('li.route-item');
       if (!li) return { error: 'no li.route-item' };
       const scope = window.angular.element(li).scope().$parent;
       const sel = document.querySelector('select.channel-selection') || document.querySelector('select');
       const opts = sel ? Array.from(sel.options) : [];
-      const fromSrc = opts.filter(o => o.label.includes('R: ' + src));
+      const fromSrc = opts.filter(o => o.label && o.label.includes('R: ' + src));
       return {
         routeName: scope.routeName,
         totalChannels: opts.length,
         channelsFromSource: fromSrc.length,
-        sampleFromSource: fromSrc.slice(0, 5).map(o => ({ value: o.value, label: o.label })),
+        sampleFromSource: fromSrc.slice(0,5).map(o => ({ value: o.value, label: o.label })),
         hasApplyFn: typeof scope.applyChannelChanges,
         hasSaveBtn: !!document.querySelector('button[ng-click="saveRouteChanges()"]'),
+        olosRoutes: (scope.olosRoutes||[]).map(r => r.name+':'+r.count),
       };
     }, SOURCE_ROUTE_NAME);
     console.log('=== ESTADO ANGULAR ===');
