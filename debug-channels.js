@@ -50,7 +50,7 @@ async function main() {
     await page.screenshot({ path: 'debug-2.png', fullPage: true });
 
     const selInfo = await page.evaluate((t) => {
-      const s = document.querySelectorAll('select')).find(s=>s.options.length>10)||document.querySelector('select');
+      const s = Array.from(document.querySelectorAll('select')).find(s=>s.options.length>10)||document.querySelector('select');
       if (!s) return { found: false };
       const opts = Array.from(s.options).map(o => o.text);
       return { found: true, count: opts.length, sample: opts.slice(0,6), hasTarget: opts.some(x=>x.includes(t)) };
@@ -76,7 +76,7 @@ async function main() {
       const li = document.querySelector('li.route-item');
       if (!li) return { error: 'no li.route-item' };
       const scope = window.angular.element(li).scope().$parent;
-      const sel = document.querySelector('select.channel-selection') || document.querySelectorAll('select')).find(s=>s.options.length>10)||document.querySelector('select');
+      const sel = document.querySelector('select.channel-selection') || Array.from(document.querySelectorAll('select')).find(s=>s.options.length>10)||document.querySelector('select');
       const opts = sel ? Array.from(sel.options) : [];
       const fromSrc = opts.filter(o => o.label && o.label.includes('R: ' + src));
       return {
