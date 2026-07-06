@@ -105,7 +105,7 @@ async function main() {
       return {
         found: true, id: s.id, count: opts.length,
         sample: opts.slice(0, 10),
-        hasTarget: opts.some(x => re.test(x.trim())),
+        hasTarget: opts.some(x => re.test(x.trim())), matchedLabel: (opts.find(x => re.test(x.trim())) || '').trim() || null,
       };
     }, targetPattern);
     log('Select de rotas: ' + JSON.stringify(routesSelect));
@@ -114,7 +114,7 @@ async function main() {
     throw new Error('Rota alvo nao encontrada no select. Selects: ' + JSON.stringify(allSelects));
   }
 
-  await page.locator('select#' + routesSelect.id).selectOption({ label: new RegExp(targetPattern) });
+  await page.locator('select#' + routesSelect.id).selectOption({ label: routesSelect.matchedLabel });
     await page.waitForTimeout(500);
 
   const editBtn = page.locator('input[value="Editar"]').first();
