@@ -1,5 +1,6 @@
 // debug-channels.js - INVESTIGACAO read-only
 const { chromium } = require('playwright');
+const fs = require('fs');
 
 const OLOS_URL = 'https://ddm.oloschannel.com.br';
 const LOGIN_URL = OLOS_URL + '/Olos/Login.aspx?logout=true';
@@ -7,6 +8,11 @@ const OLOS_USER = process.env.OLOS_USER;
 const OLOS_PASS = process.env.OLOS_PASS;
 const TARGET_ROUTE_NAME = process.env.TARGET_ROUTE_NAME || 'R1';
 const SOURCE_ROUTE_NAME = process.env.SOURCE_ROUTE_NAME || 'NEWVOICE';
+
+const log = (msg) => {
+  console.log(msg);
+  fs.appendFileSync('resultado.txt', msg + '\n');
+};
 
 async function login(page) {
   await page.goto(LOGIN_URL, { waitUntil: 'networkidle' });
@@ -16,10 +22,11 @@ async function login(page) {
     page.waitForNavigation({ waitUntil: 'networkidle' }),
     page.click('input[type="submit"]'),
   ]);
-  console.log('Login OK. URL:', page.url());
+  log('Login OK. URL: ' + page.url());
 }
 
 async function main() {
+  fs.writeFileSync('resultado.txt', '=== DEBUG CHANNELS ===\n');
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
   try {
@@ -28,13 +35,17 @@ async function main() {
     // Entra no SysConfig via menu
     await page.locator('a').filter({ hasText: /Configura/ }).first().click();
     await page.waitForNavigation({ waitUntil: 'networkidle' });
-    console.log('SysConfig URL:', page.url());
+    log('SysConfig URL: ' + page.url());
+    await page.screenshot({ path: 'debug-1.png', fullPage: true });
 
     // Clica Infraestrutura se existir
     const infra = page.locator('a').filter({ hasText: 'Infraestrutura' });
     if (await infra.count() > 0) {
       await infra.first().click();
       await page.waitForTimeout(400);
+      log('Clicou Infraestrutura');
+    } else {
+      log('Infraestrutura nao encontrado no menu');
     }
 
     // Acha o link Listar de Rotas
@@ -43,55 +54,70 @@ async function main() {
         .find(el => el.textContent.trim() === 'Listar' && (el.href || '').includes('Route'));
       return a ? a.href : null;
     });
-    console.log('Routes Listar href:', href);
+    log('Routes Listar href: ' + href);
     if (!href) throw new Error('Link Listar de Rotas nao encontrado');
 
     await page.goto(href, { waitUntil: 'networkidle' });
-    console.log('RoutesList URL:', page.url(), '| Titulo:', await page.title());
+    log('RoutesList URL: ' + page.url() + ' | Titulo: ' + await page.title());
     await page.screenshot({ path: 'debug-2-before-search.png', fullPage: true });
 
+    // Loga botoes e inputs disponiveis antes de pesquisar
+    const btns = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('input[type=submit], input[type=button], button'))
+        .map(b => ({ tag: b.tagName, type: b.type, value: b.value, text: b.textContent.trim().slice(0,30) }))
+    );
+    log('Botoes na pagina: ' + JSON.stringify(btns));
+
     // Clica Pesquisar para carregar a lista de rotas
-    const searchBtn = page.locator('input[value="Pesquisar"], button:has-text("Pesquisar"), input[type="submit"]').first();
-    await searchBtn.click();
-    await page.waitForTimeout(1000);
-    console.log('Pesquisar clicado');
+    try {
+      const searchBtn = page.locator('input[value="Pesquisar"]').first();
+      if (await searchBtn.count() > 0) {
+        await searchBtn.click();
+        log('Clicou Pesquisar (input[value])');
+      } else {
+        await page.click('text=Pesquisar');
+        log('Clicou Pesquisar (text)');
+      }
+      await page.waitForTimeout(1000);
+    } catch(e) {
+      log('AVISO Pesquisar: ' + e.message);
+    }
     await page.screenshot({ path: 'debug-2-after-search.png', fullPage: true });
 
-    // Loga todos os selects apos a pesquisa
-    const allSelects = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll('select')).map((s, i) => ({
+    // Loga todos os selects
+    const allSelects = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('select')).map((s, i) => ({
         index: i, id: s.id, name: s.name,
         count: s.options.length,
         sample: Array.from(s.options).slice(0, 5).map(o => o.text),
-      }));
-    });
-    console.log('Selects apos Pesquisar:', JSON.stringify(allSelects));
+      }))
+    );
+    log('Selects apos Pesquisar: ' + JSON.stringify(allSelects));
 
-    // Pega o select com mais opcoes (lista de rotas)
+    // Pega o select com mais opcoes
     const routesSelect = await page.evaluate((target) => {
       const allSels = Array.from(document.querySelectorAll('select'));
-      const s = allSels.find(sel => sel.options.length > 5) || allSels[allSels.length - 1];
+      const s = allSels.reduce((best, cur) => cur.options.length > best.options.length ? cur : best, allSels[0]);
       if (!s) return { found: false };
       const opts = Array.from(s.options).map(o => o.text);
       return {
         found: true, id: s.id, count: opts.length,
-        sample: opts.slice(0, 8),
+        sample: opts.slice(0, 10),
         hasTarget: opts.some(x => x.includes(target)),
       };
     }, TARGET_ROUTE_NAME);
-    console.log('Select de rotas:', JSON.stringify(routesSelect));
+    log('Select de rotas: ' + JSON.stringify(routesSelect));
+
     if (!routesSelect.found || !routesSelect.hasTarget) {
-      throw new Error('Rota alvo nao encontrada. Selects: ' + JSON.stringify(allSelects));
+      throw new Error('Rota alvo nao encontrada no select. Selects: ' + JSON.stringify(allSelects));
     }
 
     // Seleciona rota alvo e clica Editar
-    const sel = routesSelect.id
-      ? page.locator('#' + routesSelect.id)
-      : page.locator('select').nth(allSelects.findIndex(s => s.count > 5));
-    await sel.selectOption({ label: new RegExp(TARGET_ROUTE_NAME) });
-    await page.click('input[value="Editar"], button:has-text("Editar")');
+    await page.locator('select#' + routesSelect.id).selectOption({ label: new RegExp(TARGET_ROUTE_NAME) });
+    const editBtn = page.locator('input[value="Editar"]').first();
+    await editBtn.click();
     await page.waitForNavigation({ waitUntil: 'networkidle' });
-    console.log('RoutesForm URL:', page.url());
+    log('RoutesForm URL: ' + page.url());
     await page.screenshot({ path: 'debug-3.png', fullPage: true });
 
     // Aba Canais -> Configurar Canais
@@ -100,7 +126,7 @@ async function main() {
     await page.click('text=Configurar Canais');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(1500);
-    console.log('RoutesFormChannel URL:', page.url());
+    log('RoutesFormChannel URL: ' + page.url());
     await page.screenshot({ path: 'debug-4.png', fullPage: true });
 
     // Le estado Angular (somente leitura)
@@ -121,8 +147,8 @@ async function main() {
         olosRoutes: (scope.olosRoutes || []).map(r => r.name + ':' + r.count),
       };
     }, SOURCE_ROUTE_NAME);
-    console.log('=== ESTADO ANGULAR ===');
-    console.log(JSON.stringify(state, null, 2));
+    log('=== ESTADO ANGULAR ===');
+    log(JSON.stringify(state, null, 2));
 
   } finally {
     await browser.close();
@@ -130,6 +156,6 @@ async function main() {
 }
 
 main().catch(err => {
-  console.error('Erro fatal:', err.message);
+  log('Erro fatal: ' + err.message);
   process.exit(1);
 });
