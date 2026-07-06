@@ -25,21 +25,19 @@ async function main() {
   try {
     await login(page);
 
-    // Entra no SysConfig via menu para estabelecer contexto de sessao
-    const cfgLink = page.locator('a').filter({ hasText: /Configura/ }).first();
-    await cfgLink.click();
+    // Entra no SysConfig via menu
+    await page.locator('a').filter({ hasText: /Configura/ }).first().click();
     await page.waitForNavigation({ waitUntil: 'networkidle' });
     console.log('SysConfig URL:', page.url());
-    await page.screenshot({ path: 'debug-1.png', fullPage: true });
 
-    // Clica Infraestrutura se existir no menu lateral
+    // Clica Infraestrutura se existir
     const infra = page.locator('a').filter({ hasText: 'Infraestrutura' });
     if (await infra.count() > 0) {
       await infra.first().click();
       await page.waitForTimeout(400);
     }
 
-    // Acha o link Listar que aponta para RoutesList
+    // Acha o link Listar de Rotas
     const href = await page.evaluate(() => {
       const a = Array.from(document.querySelectorAll('a'))
         .find(el => el.textContent.trim() === 'Listar' && (el.href || '').includes('Route'));
@@ -50,42 +48,47 @@ async function main() {
 
     await page.goto(href, { waitUntil: 'networkidle' });
     console.log('RoutesList URL:', page.url(), '| Titulo:', await page.title());
-    await page.screenshot({ path: 'debug-2.png', fullPage: true });
+    await page.screenshot({ path: 'debug-2-before-search.png', fullPage: true });
 
-    // Loga todos os selects para identificar o correto
+    // Clica Pesquisar para carregar a lista de rotas
+    const searchBtn = page.locator('input[value="Pesquisar"], button:has-text("Pesquisar"), input[type="submit"]').first();
+    await searchBtn.click();
+    await page.waitForTimeout(1000);
+    console.log('Pesquisar clicado');
+    await page.screenshot({ path: 'debug-2-after-search.png', fullPage: true });
+
+    // Loga todos os selects apos a pesquisa
     const allSelects = await page.evaluate(() => {
       return Array.from(document.querySelectorAll('select')).map((s, i) => ({
-        index: i,
-        id: s.id,
-        name: s.name,
+        index: i, id: s.id, name: s.name,
         count: s.options.length,
         sample: Array.from(s.options).slice(0, 5).map(o => o.text),
       }));
     });
-    console.log('Selects na pagina:', JSON.stringify(allSelects));
+    console.log('Selects apos Pesquisar:', JSON.stringify(allSelects));
 
-    // Pega o select com mais opcoes (rotas tem muitas; tipos tem poucas)
-    const selInfo = await page.evaluate((target) => {
+    // Pega o select com mais opcoes (lista de rotas)
+    const routesSelect = await page.evaluate((target) => {
       const allSels = Array.from(document.querySelectorAll('select'));
-      const s = allSels.find(sel => sel.options.length > 10) || allSels[allSels.length - 1];
+      const s = allSels.find(sel => sel.options.length > 5) || allSels[allSels.length - 1];
       if (!s) return { found: false };
       const opts = Array.from(s.options).map(o => o.text);
       return {
-        found: true,
-        id: s.id,
-        count: opts.length,
+        found: true, id: s.id, count: opts.length,
         sample: opts.slice(0, 8),
         hasTarget: opts.some(x => x.includes(target)),
       };
     }, TARGET_ROUTE_NAME);
-    console.log('Select de rotas:', JSON.stringify(selInfo));
-    if (!selInfo.found || !selInfo.hasTarget) throw new Error('Rota alvo nao encontrada. Veja selects acima');
+    console.log('Select de rotas:', JSON.stringify(routesSelect));
+    if (!routesSelect.found || !routesSelect.hasTarget) {
+      throw new Error('Rota alvo nao encontrada. Selects: ' + JSON.stringify(allSelects));
+    }
 
-    // Seleciona a rota alvo e clica Editar
-    const routeSelect = selInfo.id
-      ? page.locator('#' + selInfo.id)
-      : page.locator('select').filter({ hasText: TARGET_ROUTE_NAME });
-    await routeSelect.selectOption({ label: new RegExp(TARGET_ROUTE_NAME) });
+    // Seleciona rota alvo e clica Editar
+    const sel = routesSelect.id
+      ? page.locator('#' + routesSelect.id)
+      : page.locator('select').nth(allSelects.findIndex(s => s.count > 5));
+    await sel.selectOption({ label: new RegExp(TARGET_ROUTE_NAME) });
     await page.click('input[value="Editar"], button:has-text("Editar")');
     await page.waitForNavigation({ waitUntil: 'networkidle' });
     console.log('RoutesForm URL:', page.url());
