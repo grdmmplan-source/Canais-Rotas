@@ -41,3 +41,7 @@ jobs:
           TARGET_ROUTE_NAME: ${{ inputs.target_route }}
           SOURCE_ROUTE_NAME: ${{ inputs.source_route }}
         run: node debug-channels.js
+      - name: Upload debug artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: debug-artifacts, path: debug-*.png, if-no-files-found: ignore }
