@@ -132,21 +132,7 @@ async function main() {
     await page.screenshot({ path: 'debug-4.png', fullPage: true });
 
   const state = await page.evaluate((src) => {
-    const li = document.querySelector('li.route-item');
-    if (!li) return { error: 'no li.route-item found' };
-    const scope = window.angular.element(li).scope().$parent;
-    const sel = document.querySelector('select.channel-selection') || document.querySelector('select');
-    const opts = sel ? Array.from(sel.options) : [];
-    const fromSrc = opts.filter(o => o.label && o.label.includes('R: ' + src));
-    return {
-      routeName: scope.routeName,
-      totalChannels: opts.length,
-      channelsFromSource: fromSrc.length,
-      sampleFromSource: fromSrc.slice(0, 5).map(o => ({ value: o.value, label: o.label })),
-      hasApplyFn: typeof scope.applyChannelChanges,
-      hasSaveBtn: !!document.querySelector('button[ng-click="saveRouteChanges()"]'),
-      olosRoutes: (scope.olosRoutes || []).map(r => r.name + ':' + r.count),
-    };
+    const ngRepeatEls = Array.from(document.querySelectorAll('[ng-repeat]')).map(el => el.getAttribute('ng-repeat')); const selects = Array.from(document.querySelectorAll('select')).map(s => ({ id: s.id, cls: s.className, count: s.options.length })); const classesWithRoute = Array.from(document.querySelectorAll('[class*="route"], [class*="channel"]')).slice(0,20).map(el => ({ tag: el.tagName, cls: el.className })); return { title: document.title, hasAngular: typeof window.angular !== 'undefined', ngRepeatEls: [...new Set(ngRepeatEls)], selects, classesWithRoute, bodyTextSample: document.body.innerText.slice(0, 300) };
   }, SOURCE_ROUTE_NAME);
     log('=== ESTADO ANGULAR ===');
     log(JSON.stringify(state, null, 2));
