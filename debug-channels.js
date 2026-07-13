@@ -125,7 +125,7 @@ async function main() {
 
   await page.click('text=Canais');
     await page.waitForTimeout(500);
-    const tabLinks = await page.evaluate(() => Array.from(document.querySelectorAll('a, li, span, div')).map(el => (el.textContent||'').trim()).filter(t => t && t.length < 40 && /canal|canai/i.test(t))); log('Textos com canal: ' + JSON.stringify([...new Set(tabLinks)])); await page.screenshot({ path: 'debug-3b.png', fullPage: true }); await page.click('text=Configurar Canais');
+    const tabLinks = await page.evaluate(() => Array.from(document.querySelectorAll('a, li, span, div')).map(el => (el.textContent||'').trim()).filter(t => t && t.length < 40 && /canal|canai/i.test(t))); log('Textos com canal: ' + JSON.stringify([...new Set(tabLinks)])); await page.screenshot({ path: 'debug-3b.png', fullPage: true }); await page.click('text=Controle de Canais');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(1500);
     log('RoutesFormChannel URL: ' + page.url());
